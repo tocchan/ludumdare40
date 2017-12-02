@@ -30,6 +30,10 @@ public class ClientSceneController : MonoBehaviour
 
    public void Update()
    {
+      if ((CurrentState != eClientState.DISCOVER) && (!NetworkManager.singleton.isNetworkActive)) {
+         SetState( eClientState.DISCOVER ); 
+      }
+
       switch (CurrentState) {
          case eClientState.DISCOVER:
             UpdateDiscovery(); 
