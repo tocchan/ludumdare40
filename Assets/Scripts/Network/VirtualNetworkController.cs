@@ -6,22 +6,14 @@ using UnityEngine.Networking;
 [NetworkSettings( channel=1, sendInterval = 0.05f )]
 public class VirtualNetworkController : NetworkBehaviour
 {
-   [SyncVar]
    public Vector2 Movement; 
    
-   [SyncVar]
    public uint ActionCount; 
-
-   public bool MarkDirty = false; 
-
    private uint LastConsumedAction = 0;
 
-   public void Update()
-   {
-      if (MarkDirty) {
-         SetDirtyBit(0xffffffff); 
-      }
-   }
+   public bool ClientIsReady = false;
+   public bool IsPresentInGame = false; 
+
 
    public void SetMovement( Vector2 v )
    {
@@ -60,6 +52,17 @@ public class VirtualNetworkController : NetworkBehaviour
          return true;
       }
       return false; 
+   }
+
+   [Command(channel=0)]
+   public void CmdSetReady( bool ready )
+   {
+      ClientIsReady = ready; 
+   }
+   
+   public bool IsInGame()
+   {
+      return IsPresentInGame; 
    }
 }
 

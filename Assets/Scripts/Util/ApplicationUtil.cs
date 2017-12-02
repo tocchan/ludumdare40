@@ -4,8 +4,6 @@ using UnityEngine;
 
 public static class ApplicationUtil
 {
-   public static bool ForceController = true; 
-
    //----------------------------------------------------------------
    public static void Quit()
    {
@@ -14,21 +12,5 @@ public static class ApplicationUtil
       #else
          Application.Quit(); 
       #endif
-   }
-
-   //----------------------------------------------------------------
-   public static bool IsGame()
-   {
-      return !ForceController
-         && ((Application.platform == RuntimePlatform.WindowsPlayer)
-            || (Application.platform == RuntimePlatform.WindowsEditor)); 
-   }
-
-   //----------------------------------------------------------------
-   public static bool IsController()
-   {
-      return ForceController
-            || (Application.platform == RuntimePlatform.Android)
-            || (Application.platform == RuntimePlatform.IPhonePlayer);
    }
 }
