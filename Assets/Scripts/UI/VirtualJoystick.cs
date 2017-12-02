@@ -61,7 +61,6 @@ public class VirtualJoystick : MonoBehaviour
    //---------------------------------------------------------------------
    void UpdateAction( Touch touch )
    {
-      Debug.Log( "ACTION" ); 
       VirtualNetworkController controller = HopperNetwork.GetMyController(); 
       if (controller != null) {
          controller.DoAction();

@@ -126,6 +126,7 @@ public class HopperNetwork : NetworkManager
       }
    }
 
+   //-------------------------------------------------------------------
    public static VirtualNetworkController GetMyController()
    {
       NetworkConnection conn = GetMyConnection();
@@ -162,7 +163,39 @@ public class HopperNetwork : NetworkManager
          }
       }
    }
+   
+   //-------------------------------------------------------------------
+   public static bool IsEveryoneReady()
+   {
+      var objects = GameObject.FindObjectsOfType<VirtualNetworkController>(); 
+      for (int i = 0; i < objects.Length; ++i) {
+         if (objects[i].ClientIsReady == false) {
+            return false; 
+         }
+      }
 
+      return true; 
+   }
+
+   //-------------------------------------------------------------------
+   public static void StartGame()
+   {
+      var objects = GameObject.FindObjectsOfType<VirtualNetworkController>(); 
+      for (int i = 0; i < objects.Length; ++i) {
+         objects[i].RPCSetInGame(true); 
+      }
+   }
+
+   //-------------------------------------------------------------------
+   public static void EndGame()
+   {
+      var objects = GameObject.FindObjectsOfType<VirtualNetworkController>(); 
+      for (int i = 0; i < objects.Length; ++i) {
+         objects[i].RPCSetInGame(false); 
+      }
+   }
+
+   //-------------------------------------------------------------------
    public static HopperNetwork Instance
    {
       get {
