@@ -15,6 +15,7 @@ public class PredatorController : MonoBehaviour
 	public float m_stomachSizeMax = 3.0f;
 	public float m_foodSizeBunny = 1.0f;
 	public float m_foodDigestSpeed = 1.0f;
+	public float m_attackDuration = 0.25f;
 
 
 	//-------------------------------------------------------------------------------------------------
@@ -24,13 +25,21 @@ public class PredatorController : MonoBehaviour
 
 	//-------------------------------------------------------------------------------------------------
 	private float m_stomachSizeCurrent = 0.0f;
+	private float m_attackTimer = 0.0f;
 	private Vector2 m_moveCurrent = Vector2.zero;
+	private Vector2 m_movePrevious = Vector2.one;
+	private bool m_moveNeedsUpdate = false;
+	private bool m_isAttacking = false;
 
 
 	//-------------------------------------------------------------------------------------------------
 	// References
 	//-------------------------------------------------------------------------------------------------
+	[Header("References")]
+	public GameObject m_attackAreaReference;
 	Rigidbody2D m_rigidbody;
+	CircleCollider2D m_attackAreaCollider;
+	ContactFilter2D m_attackAreaFilter;
 
 
 	//-------------------------------------------------------------------------------------------------
@@ -39,6 +48,9 @@ public class PredatorController : MonoBehaviour
 	private void Start()
 	{
 		m_rigidbody = GetComponent<Rigidbody2D>();
+		m_attackAreaCollider = m_attackAreaReference.GetComponent<CircleCollider2D>();
+		m_attackAreaFilter = new ContactFilter2D();
+		m_attackAreaFilter.NoFilter();
 	}
 
 
@@ -48,6 +60,7 @@ public class PredatorController : MonoBehaviour
 		UpdateFoodConsumption();
 		UpdateDebugInput();
 		UpdateMove();
+		UpdateAttack();
 	}
 
 
@@ -103,12 +116,22 @@ public class PredatorController : MonoBehaviour
 				Move(moveDirection);
 			}
 		}
+
+		if(Input.GetMouseButtonDown(1))
+		{
+			Attack();
+		}
 	}
 
 
 	//-------------------------------------------------------------------------------------------------
 	private void UpdateMove()
 	{
+		if(!m_moveNeedsUpdate)
+		{
+			return;
+		}
+
 		//Get move speed from stomach
 		float stomachPercent = m_stomachSizeCurrent / m_stomachSizeMax;
 		float moveSpeed = Mathf.Lerp(m_moveSpeedMax, m_moveSpeedMin, stomachPercent);
@@ -119,19 +142,74 @@ public class PredatorController : MonoBehaviour
 
 		//Reset move direction
 		m_moveCurrent = Vector2.zero;
+
+		m_moveNeedsUpdate = false;
+	}
+
+
+	//-------------------------------------------------------------------------------------------------
+	private void UpdateAttack()
+	{
+		if(m_isAttacking)
+		{
+			m_attackTimer += Time.deltaTime;
+
+			//Find what we can attack
+			int maxThingsToEatThisFrame = 10;
+			Collider2D[] colliders = new Collider2D[maxThingsToEatThisFrame];
+			m_attackAreaCollider.OverlapCollider(m_attackAreaFilter, colliders);
+
+			//Loop through all things attacked
+			for(int colliderIndex = 0; colliderIndex < colliders.Length; ++colliderIndex)
+			{
+				if(colliders[colliderIndex] == null)
+				{
+					continue;
+				}
+
+				GameObject attackedObject = colliders[colliderIndex].gameObject;
+				PreyController attackedPrey = attackedObject.GetComponent<PreyController>();
+				if(attackedPrey != null)
+				{
+					attackedPrey.Eaten();
+					m_stomachSizeCurrent += m_foodSizeBunny;
+				}
+			}
+
+			//Stop attacking
+			if (m_attackTimer >= m_attackDuration)
+			{
+				m_isAttacking = false;
+			}
+		}
+		else
+		{
+			//Update attack area location
+			float attackAreaOffset = 0.25f;
+			m_attackAreaReference.transform.localPosition = m_movePrevious * attackAreaOffset;
+		}
 	}
 
 
 	//-------------------------------------------------------------------------------------------------
 	public void Move(Vector2 moveDirection)
 	{
+		if(m_isAttacking)
+		{
+			return;
+		}
+
 		m_moveCurrent += moveDirection.normalized;
+		m_moveNeedsUpdate = true;
+		m_movePrevious = moveDirection.normalized;
 	}
 
 
 	//-------------------------------------------------------------------------------------------------
 	public void Attack()
 	{
-
+		Move(m_movePrevious);
+		m_isAttacking = true;
+		m_attackTimer = 0.0f;
 	}
 }

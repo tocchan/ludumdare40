@@ -12,6 +12,8 @@ public class PreyController : MonoBehaviour
 	[Header("Settings")]
 	public float m_hopDuration = 0.5f;
 	public float m_hopSpeed = 1.0f;
+	public float m_hopHeightMax = 0.25f;
+	public AnimationCurve m_hopCurve;
 
 
 	//-------------------------------------------------------------------------------------------------
@@ -30,6 +32,7 @@ public class PreyController : MonoBehaviour
 	private bool m_isMating = false;
 	private float m_hopTimer = 0.0f;
 	private Vector2 m_hopDirection = Vector2.zero;
+	private Vector2 m_visualStartLocation = Vector2.zero;
 
 	private float m_moveTimerAI = 0.0f;
 
@@ -39,7 +42,7 @@ public class PreyController : MonoBehaviour
 	// References
 	//-------------------------------------------------------------------------------------------------
 	[Header("References")]
-	public GameObject m_preyPrefab;
+	public GameObject m_visualReference;
 	Rigidbody2D m_rigidbody;
 
 
@@ -49,6 +52,7 @@ public class PreyController : MonoBehaviour
 	private void Start()
 	{
 		m_rigidbody = GetComponent<Rigidbody2D>();
+		m_visualStartLocation = m_visualReference.transform.localPosition;
 	}
 
 
@@ -157,10 +161,36 @@ public class PreyController : MonoBehaviour
 			//Maybe alter it over time eventually
 			m_rigidbody.velocity = m_hopDirection * m_hopSpeed;
 
+			UpdateHopVisual();
+
 			if (m_hopTimer > m_hopDuration)
 			{
 				StopHop();
 			}
+		}
+	}
+
+
+	//-------------------------------------------------------------------------------------------------
+	private void UpdateHopVisual()
+	{
+		//Hop Height
+		float hopPercent = m_hopTimer / m_hopDuration;
+		Vector2 hopHeight = m_hopCurve.Evaluate(hopPercent) * m_hopHeightMax * Vector2.up;
+		Vector2 hopLocation = m_visualStartLocation + hopHeight;
+		m_visualReference.transform.localPosition = hopLocation;
+
+		//Facing direction
+		if(m_hopDirection.x > 0.0f)
+		{
+			Vector3 scale = m_visualReference.transform.localScale;
+			scale.x = -1.0f;
+			m_visualReference.transform.localScale = scale;
+		}
+		else
+		{
+			Vector3 scale = Vector3.one;
+			m_visualReference.transform.localScale = scale;
 		}
 	}
 
@@ -183,6 +213,7 @@ public class PreyController : MonoBehaviour
 	{
 		m_isHopping = true;
 		m_hopTimer = 0.0f;
+		UpdateHopVisual();
 
 		//Rest AI random move delay
 		m_moveTimerAI = Random.Range(m_moveDelayMin, m_moveDelayMax);
@@ -194,7 +225,9 @@ public class PreyController : MonoBehaviour
 	{
 		m_isHopping = false;
 		m_isMating = false;
+		m_hopTimer = 0.0f;
 		m_rigidbody.velocity = Vector2.zero;
+		UpdateHopVisual();
 	}
 
 
@@ -230,12 +263,19 @@ public class PreyController : MonoBehaviour
 			//Spawn babies
 			for (int babyIndex = 0; babyIndex < spawnTotal; ++babyIndex )
 			{
-				Instantiate(m_preyPrefab, babyLocation, Quaternion.identity);
+				Instantiate(GameManager.GetInstance().m_preyPrefab, babyLocation, Quaternion.identity);
 			}
 
 			StartHop();
 			otherPrey.StopHop();
 		}
+	}
+
+
+	//-------------------------------------------------------------------------------------------------
+	public void Eaten()
+	{
+		Destroy(gameObject);
 	}
 
 
