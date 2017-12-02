@@ -97,6 +97,16 @@ public class HopperNetwork : NetworkManager
       return null; 
    }
 
+   public static int GetConnectionCount()
+   {
+      NetworkManager mgr = NetworkManager.singleton;
+      if (mgr == null) {
+         return 0;
+      } else {
+         return NetworkServer.connections.Count;
+      }
+   }
+
    public static VirtualNetworkController GetMyController()
    {
       NetworkConnection conn = GetMyConnection();
