@@ -26,11 +26,20 @@ public class HopperNetwork : NetworkManager
    public override void OnServerConnect( NetworkConnection conn )
    {
       Debug.Log( "Client Connected to Server: " + conn.address ); 
+      base.OnServerConnect(conn); 
+   }
+
+   public override void OnServerReady( NetworkConnection conn )
+   {
+      Debug.Log( "Client is Ready: " + conn.address ); 
+      base.OnServerReady(conn); 
+
    }
 
    public override void OnClientConnect( NetworkConnection conn )
    {
       Debug.Log( "Client connected successful" ); 
+      base.OnClientConnect(conn); 
    }
 
    public string GetLocalAddress()

@@ -17,6 +17,12 @@ public class HopperDiscover : NetworkDiscovery
    }
 
    //------------------------------------------------------
+   private void OnDestroy()
+   {
+      Stop(); 
+   }
+
+   //------------------------------------------------------
    public void Discover()
    {
       Initialize(); 
