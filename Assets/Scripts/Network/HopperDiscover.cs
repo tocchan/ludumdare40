@@ -8,6 +8,7 @@ using UnityEngine.Networking;
 public class HopperDiscover : NetworkDiscovery
 {
    public readonly ushort GAME_PORT = 5239;
+   public bool FoundAddress = false; 
 
    //------------------------------------------------------
    void Start()
@@ -19,6 +20,7 @@ public class HopperDiscover : NetworkDiscovery
    public void Discover()
    {
       Initialize(); 
+      FoundAddress = false; 
       if (HopperNetwork.IsHost()) {
          Debug.Log( "Broadcast as Server" ); 
          StartAsServer(); 
@@ -28,20 +30,22 @@ public class HopperDiscover : NetworkDiscovery
    }
 
    //------------------------------------------------------
-   public override void OnReceivedBroadcast(string fromAddress, string data)
+   public override void OnReceivedBroadcast( string fromAddress, string data )
    {
-      if (NetworkManager.singleton != null) {
-         NetworkManager.singleton.StartClient();
-      }
+      Debug.Log( "Broadcast: " + fromAddress ); 
+      NetworkManager.singleton.networkAddress = fromAddress; 
+      FoundAddress = true; 
    }
 
    //------------------------------------------------------
    public void Stop()
    {
+      FoundAddress = false; 
       StopBroadcast(); 
       Debug.Log( "Stopping Broadcast" ); 
    }
 
+   //------------------------------------------------------
    public bool IsRunning()
    {
       return isClient || isServer; 

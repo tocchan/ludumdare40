@@ -31,12 +31,17 @@ public class NetworkTest : MonoBehaviour {
          SetHostText( mgr.networkAddress.ToString(), mgr.networkPort ); 
          SetBroadcasting( Discoverer.isServer || Discoverer.isClient ); 
       }
+
+      if (Discoverer.FoundAddress) {
+         Discoverer.Stop(); 
+         NetworkManager.singleton.StartClient(); 
+      }
 	}
 
    void SetStateText( bool isActive, bool isServer )
    {
       AddressText.gameObject.SetActive(isActive);
-      BroadcastText.gameObject.SetActive(isActive); 
+      // BroadcastText.gameObject.SetActive(isActive); 
 
       if (isActive) {
          HostText.text = isServer ? " HOST" : "CLIENT"; 
@@ -74,6 +79,13 @@ public class NetworkTest : MonoBehaviour {
       } else {
          Discoverer.Discover(); 
       }
+   }
+
+   public void Join()
+   {
+      Debug.Log( "Trying to Join" ); 
+      NetworkManager.singleton.networkAddress = "::ffff:192.168.0.27"; 
+      NetworkManager.singleton.StartClient();
    }
 
 
