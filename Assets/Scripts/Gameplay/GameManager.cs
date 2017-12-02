@@ -4,21 +4,37 @@ using UnityEngine;
 
 
 //-------------------------------------------------------------------------------------------------
+public enum eGameState
+{
+	WAIT_FOR_READY,
+	IN_GAME,
+	GAME_OVER,
+}
+
+
+//-------------------------------------------------------------------------------------------------
 public class GameManager : MonoSingleton<GameManager>
 {
 	//-------------------------------------------------------------------------------------------------
 	public static string TAG_PREY = "Prey";
+	public static string ANIM_RABBIT_HOP = "anim_rabbit_hop";
 	public static float GAME_Z = -1.0f;
 
 
 	//-------------------------------------------------------------------------------------------------
 	[Header("Settings")]
 	public int m_babySpawnTotal = 4;
+	public float m_gameDuration;
 
 
 	//-------------------------------------------------------------------------------------------------
 	[Header("Prefabs")]
 	public GameObject m_preyPrefab;
+
+
+	//-------------------------------------------------------------------------------------------------
+	private float m_gameTimer = 0.0f;
+	private eGameState m_currentState = eGameState.WAIT_FOR_READY;
 
 
 	//-------------------------------------------------------------------------------------------------
@@ -83,5 +99,40 @@ public class GameManager : MonoSingleton<GameManager>
 
 		//Closest prey not within range
 		return null;
+	}
+
+
+	//-------------------------------------------------------------------------------------------------
+	private void Start()
+	{
+
+	}
+
+
+	//-------------------------------------------------------------------------------------------------
+	private void Update()
+	{
+		UpdateState(m_currentState);
+	}
+
+
+	//-------------------------------------------------------------------------------------------------
+	private void EnterState(eGameState state)
+	{
+
+	}
+
+
+	//-------------------------------------------------------------------------------------------------
+	private void UpdateState(eGameState state)
+	{
+
+	}
+
+
+	//-------------------------------------------------------------------------------------------------
+	private void ExitState(eGameState state)
+	{
+
 	}
 }

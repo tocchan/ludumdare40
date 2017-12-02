@@ -44,6 +44,7 @@ public class PreyController : MonoBehaviour
 	[Header("References")]
 	public GameObject m_visualReference;
 	Rigidbody2D m_rigidbody;
+	Animator m_animator;
 
 
 	//-------------------------------------------------------------------------------------------------
@@ -52,6 +53,7 @@ public class PreyController : MonoBehaviour
 	private void Start()
 	{
 		m_rigidbody = GetComponent<Rigidbody2D>();
+		m_animator = m_visualReference.GetComponent<Animator>();
 		m_visualStartLocation = m_visualReference.transform.localPosition;
 	}
 
@@ -63,6 +65,7 @@ public class PreyController : MonoBehaviour
 		UpdateInputNet();
 		UpdateInputAI();
 		UpdateHop();
+		UpdateVisual();
 	}
 
 
@@ -161,8 +164,6 @@ public class PreyController : MonoBehaviour
 			//Maybe alter it over time eventually
 			m_rigidbody.velocity = m_hopDirection * m_hopSpeed;
 
-			UpdateHopVisual();
-
 			if (m_hopTimer > m_hopDuration)
 			{
 				StopHop();
@@ -172,7 +173,7 @@ public class PreyController : MonoBehaviour
 
 
 	//-------------------------------------------------------------------------------------------------
-	private void UpdateHopVisual()
+	private void UpdateVisual()
 	{
 		//Hop Height
 		float hopPercent = m_hopTimer / m_hopDuration;
@@ -192,6 +193,8 @@ public class PreyController : MonoBehaviour
 			Vector3 scale = Vector3.one;
 			m_visualReference.transform.localScale = scale;
 		}
+
+		m_animator.Play(GameManager.ANIM_RABBIT_HOP, 0, hopPercent);
 	}
 
 
@@ -213,7 +216,6 @@ public class PreyController : MonoBehaviour
 	{
 		m_isHopping = true;
 		m_hopTimer = 0.0f;
-		UpdateHopVisual();
 
 		//Rest AI random move delay
 		m_moveTimerAI = Random.Range(m_moveDelayMin, m_moveDelayMax);
@@ -227,7 +229,6 @@ public class PreyController : MonoBehaviour
 		m_isMating = false;
 		m_hopTimer = 0.0f;
 		m_rigidbody.velocity = Vector2.zero;
-		UpdateHopVisual();
 	}
 
 
@@ -282,10 +283,12 @@ public class PreyController : MonoBehaviour
 	//-------------------------------------------------------------------------------------------------
 	private bool IsPlayer()
 	{
-		//return m_netController != null;
+		if(m_debugControl)
+		{
+			return true;
+		}
 
-		//Debug
-		return true;
+		return m_netController != null;
 	}
 
 
