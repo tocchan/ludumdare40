@@ -15,8 +15,13 @@ public class HopperNetwork : NetworkManager
       CLIENT_READY, 
    };
 
+   public delegate void DOnPlayerJoin( NetworkConnection conn );
+   public delegate void DOnPlayerLeave( NetworkConnection conn ); 
+
    public bool IsHostScene = false; 
    public HopperDiscover Discovery; 
+   public DOnPlayerJoin OnPlayerJoin;
+   public DOnPlayerLeave OnPlayerLeave; 
 
    public void Start()
    {
@@ -62,8 +67,18 @@ public class HopperNetwork : NetworkManager
    public override void OnServerReady( NetworkConnection conn )
    {
       Debug.Log( "Client is Ready: " + conn.address ); 
+      if (OnPlayerJoin != null) {
+         OnPlayerJoin(conn);
+      }
       base.OnServerReady(conn); 
+   }
 
+   public override void OnServerDisconnect(NetworkConnection conn)
+   {
+      if (OnPlayerLeave != null) {
+         OnPlayerLeave(conn);
+      }
+      base.OnServerDisconnect(conn);
    }
 
    public override void OnClientConnect( NetworkConnection conn )
@@ -103,7 +118,11 @@ public class HopperNetwork : NetworkManager
       if (mgr == null) {
          return 0;
       } else {
-         return NetworkServer.connections.Count;
+         if (NetworkServer.connections.Count > 0) {
+            return NetworkServer.connections.Count - 1; // don't count the server
+         } else {
+            return 0;
+         }
       }
    }
 
@@ -144,5 +163,11 @@ public class HopperNetwork : NetworkManager
       }
    }
 
+   public static HopperNetwork Instance
+   {
+      get {
+         return (HopperNetwork)NetworkManager.singleton;
+      }
+   }
 }
 
