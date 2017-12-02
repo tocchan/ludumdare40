@@ -18,12 +18,24 @@ public class VirtualNetworkController : NetworkBehaviour
    public void SetMovement( Vector2 v )
    {
       Movement = v; 
-      Debug.Log("Movement"); 
+      CmdMovement( v ); 
+   }
+
+   [Command (channel=1)]
+   void CmdMovement( Vector2 v )
+   {
+      Movement = v; 
    }
 
    public void DoAction()
    {
-      Debug.Log("Action"); 
+      ++ActionCount; 
+      CmdAction(); 
+   }
+
+   [Command (channel=0)]
+   void CmdAction()
+   {
       ++ActionCount; 
    }
 
@@ -61,10 +73,17 @@ public class VirtualNetworkController : NetworkBehaviour
    {
       ClientIsReady = ready; 
    }
+
+   [ClientRpc(channel = 0)]
+   public void RPCSetInGame( bool inGame )
+   {
+      IsPresentInGame = inGame; 
+   }
    
    public bool IsInGame()
    {
       return IsPresentInGame; 
    }
+
 }
 
