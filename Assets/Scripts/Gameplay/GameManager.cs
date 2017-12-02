@@ -17,6 +17,11 @@ public class GameManager : MonoSingleton<GameManager>
 
 
 	//-------------------------------------------------------------------------------------------------
+	[Header("Prefabs")]
+	public GameObject m_preyPrefab;
+
+
+	//-------------------------------------------------------------------------------------------------
 	public static PreyController GetClosestPrey(PreyController fromPrey)
 	{
 		return GetClosestPrey(fromPrey.gameObject.transform.position, fromPrey);
