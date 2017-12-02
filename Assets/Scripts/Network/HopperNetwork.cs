@@ -7,6 +7,10 @@ public class HopperNetwork : NetworkManager
 {
    public void Start()
    {
+      Debug.Log( GetLocalAddress() ); 
+      networkAddress = GetLocalAddress(); 
+
+      /*
       if (ApplicationUtil.IsGame()) {
          if (StartServer()) {
             Debug.Log( "Starting to Host." );
@@ -16,6 +20,7 @@ public class HopperNetwork : NetworkManager
       } else {
          // do nothing, wait until broadcast
       }
+      */
    }
 
    public override void OnServerConnect( NetworkConnection conn )
@@ -26,6 +31,21 @@ public class HopperNetwork : NetworkManager
    public override void OnClientConnect( NetworkConnection conn )
    {
       Debug.Log( "Client connected successful" ); 
+   }
+
+   public string GetLocalAddress()
+   {
+      return Network.player.ipAddress;
+   }
+
+   public static bool IsHost()
+   {
+      NetworkManager mgr = NetworkManager.singleton;
+      if ((mgr == null) || (!mgr.isNetworkActive)) {
+         return false; 
+      }
+
+      return (NetworkServer.active); 
    }
 }
 

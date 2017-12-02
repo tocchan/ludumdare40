@@ -13,10 +13,16 @@ public class HopperDiscover : NetworkDiscovery
    void Start()
    {
       Object.DontDestroyOnLoad(gameObject); 
-      if (ApplicationUtil.IsGame()) {
+   }
+
+   //------------------------------------------------------
+   public void Discover()
+   {
+      Initialize(); 
+      if (HopperNetwork.IsHost()) {
          Debug.Log( "Broadcast as Server" ); 
+         StartAsServer(); 
       } else {
-         Debug.Log( "Listening as Client" );
          StartAsClient();
       }
    }
@@ -34,6 +40,11 @@ public class HopperDiscover : NetworkDiscovery
    {
       StopBroadcast(); 
       Debug.Log( "Stopping Broadcast" ); 
+   }
+
+   public bool IsRunning()
+   {
+      return isClient || isServer; 
    }
 }
 

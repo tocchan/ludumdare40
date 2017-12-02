@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VirtualController : MonoBehaviour
+public class VirtualNetworkController : MonoBehaviour
 {
    // Use this for initialization
    void Start()
