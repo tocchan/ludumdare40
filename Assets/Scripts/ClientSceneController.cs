@@ -55,8 +55,8 @@ public class ClientSceneController : MonoBehaviour
    public void SetState( eClientState state )
    {
       ReadyUpUI.SetActive(false);
-      WolfUI.SetActive(false);
-      HopperUI.SetActive(false); 
+      // WolfUI.SetActive(false);
+      // HopperUI.SetActive(false); 
 
       CurrentState = state; 
       switch (state) {

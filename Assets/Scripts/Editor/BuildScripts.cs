@@ -12,7 +12,7 @@ public static class BuildScripts
       string path = "Builds/hopcontroller.apk";
 
       UnityEditor.SceneManagement.EditorSceneManager.SaveOpenScenes();
-      string[] levels = { UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene().path }; 
+      string[] levels = { UnityEditor.SceneManagement.EditorSceneManager.GetSceneByName("Controller").path }; 
       if (string.IsNullOrEmpty(levels[0])) {
          Debug.LogError( "No scene loaded. " ); 
          return; 
