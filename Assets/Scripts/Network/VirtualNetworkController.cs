@@ -18,10 +18,12 @@ public class VirtualNetworkController : NetworkBehaviour
    public void SetMovement( Vector2 v )
    {
       Movement = v; 
+      Debug.Log("Movement"); 
    }
 
    public void DoAction()
    {
+      Debug.Log("Action"); 
       ++ActionCount; 
    }
 
