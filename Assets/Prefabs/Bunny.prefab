@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 50112557406053264}
   m_Layer: 0
   m_Name: Bunny
-  m_TagString: Untagged
+  m_TagString: Prey
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -65,7 +65,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1037198839472234}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
+  m_LocalPosition: {x: 2.42, y: 0, z: -1}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 4123917011229190}
@@ -120,7 +120,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_hopDuration: 0.5
   m_hopSpeed: 4
-  debugControl: 1
+  m_moveDelayMin: 0.3
+  m_moveDelayMax: 2
+  m_debugControl: 0
+  m_preyPrefab: {fileID: 1037198839472234}
 --- !u!212 &212080153314246044
 SpriteRenderer:
   m_ObjectHideFlags: 1

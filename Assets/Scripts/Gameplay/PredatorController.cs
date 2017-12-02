@@ -98,9 +98,9 @@ public class PredatorController : MonoBehaviour
 			if (Physics.Raycast(ray.origin, ray.direction, out hit))
 			{
 				Vector2 mouseClickPosition = new Vector2(hit.point.x, hit.point.y);
-				Vector2 currentPosition = new Vector2(transform.position.x, transform.position.y);
-				Vector2 hopDirection = mouseClickPosition - currentPosition;
-				Move(hopDirection);
+				Vector2 currentPosition = transform.position;
+				Vector2 moveDirection = mouseClickPosition - currentPosition;
+				Move(moveDirection);
 			}
 		}
 	}
