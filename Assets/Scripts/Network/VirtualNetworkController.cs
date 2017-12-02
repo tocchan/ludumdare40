@@ -12,7 +12,17 @@ public class VirtualNetworkController : NetworkBehaviour
    private uint LastConsumedAction = 0;
 
    public bool ClientIsReady = false;
-   public bool IsPresentInGame = false; 
+   public bool IsPresentInGame = false;
+
+   private void Start()
+   {
+      HopperNetwork.Instance.OnPlayerJoin(this); 
+   }
+
+   private void OnDestroy()
+   {
+      HopperNetwork.Instance.OnPlayerLeave(this); 
+   }
 
 
    public void SetMovement( Vector2 v )
@@ -75,7 +85,7 @@ public class VirtualNetworkController : NetworkBehaviour
    }
 
    [ClientRpc(channel = 0)]
-   public void RPCSetInGame( bool inGame )
+   public void RpcSetInGame( bool inGame )
    {
       IsPresentInGame = inGame; 
    }

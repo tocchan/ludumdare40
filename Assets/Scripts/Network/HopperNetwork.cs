@@ -15,8 +15,8 @@ public class HopperNetwork : NetworkManager
       CLIENT_READY, 
    };
 
-   public delegate void DOnPlayerJoin( NetworkConnection conn );
-   public delegate void DOnPlayerLeave( NetworkConnection conn ); 
+   public delegate void DOnPlayerJoin( VirtualNetworkController conn );
+   public delegate void DOnPlayerLeave( VirtualNetworkController conn ); 
 
    public bool IsHostScene = false; 
    public HopperDiscover Discovery; 
@@ -67,17 +67,11 @@ public class HopperNetwork : NetworkManager
    public override void OnServerReady( NetworkConnection conn )
    {
       Debug.Log( "Client is Ready: " + conn.address ); 
-      if (OnPlayerJoin != null) {
-         OnPlayerJoin(conn);
-      }
       base.OnServerReady(conn); 
    }
 
    public override void OnServerDisconnect(NetworkConnection conn)
    {
-      if (OnPlayerLeave != null) {
-         OnPlayerLeave(conn);
-      }
       base.OnServerDisconnect(conn);
    }
 
@@ -182,7 +176,7 @@ public class HopperNetwork : NetworkManager
    {
       var objects = GameObject.FindObjectsOfType<VirtualNetworkController>(); 
       for (int i = 0; i < objects.Length; ++i) {
-         objects[i].RPCSetInGame(true); 
+         objects[i].RpcSetInGame(true); 
       }
    }
 
@@ -191,7 +185,7 @@ public class HopperNetwork : NetworkManager
    {
       var objects = GameObject.FindObjectsOfType<VirtualNetworkController>(); 
       for (int i = 0; i < objects.Length; ++i) {
-         objects[i].RPCSetInGame(false); 
+         objects[i].RpcSetInGame(false); 
       }
    }
 
