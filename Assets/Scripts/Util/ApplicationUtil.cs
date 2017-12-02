@@ -19,9 +19,9 @@ public static class ApplicationUtil
    //----------------------------------------------------------------
    public static bool IsGame()
    {
-      return ForceGame
-         || (Application.platform == RuntimePlatform.WindowsPlayer)
-         || (Application.platform == RuntimePlatform.WindowsEditor); 
+      return !ForceController
+         && ((Application.platform == RuntimePlatform.WindowsPlayer)
+            || (Application.platform == RuntimePlatform.WindowsEditor)); 
    }
 
    //----------------------------------------------------------------
