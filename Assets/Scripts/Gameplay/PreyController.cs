@@ -15,6 +15,11 @@ public class PreyController : MonoBehaviour
 
 
 	//-------------------------------------------------------------------------------------------------
+	[Header("Debug")]
+	public bool debugControl = false;
+
+
+	//-------------------------------------------------------------------------------------------------
 	private Vector2 m_hopDirection = Vector2.zero;
 	private float m_hopTimer = 0.0f;
 	private bool m_isHopping = false;
@@ -38,8 +43,8 @@ public class PreyController : MonoBehaviour
 	//-------------------------------------------------------------------------------------------------
 	private void Update()
 	{
-		UpdateHop();
 		UpdateDebugInput();
+		UpdateHop();
 	}
 
 
@@ -66,6 +71,11 @@ public class PreyController : MonoBehaviour
 	//-------------------------------------------------------------------------------------------------
 	private void UpdateDebugInput()
 	{
+		if(!debugControl)
+		{
+			return;
+		}
+
 		if(Input.GetKeyDown(KeyCode.W)
 			|| Input.GetKeyDown(KeyCode.UpArrow))
 		{
@@ -106,14 +116,14 @@ public class PreyController : MonoBehaviour
 
 
 	//-------------------------------------------------------------------------------------------------
-	public void Hop(Vector2 moveDirection)
+	public void Hop(Vector2 hopDirection)
 	{
 		if (m_isHopping)
 		{
 			return;
 		}
 
-		m_hopDirection = moveDirection.normalized;
+		m_hopDirection = hopDirection.normalized;
 		StartHop();
 	}
 
@@ -131,5 +141,12 @@ public class PreyController : MonoBehaviour
 	{
 		m_isHopping = false;
 		m_rigidbody.velocity = Vector2.zero;
+	}
+
+
+	//-------------------------------------------------------------------------------------------------
+	public void Mate()
+	{
+
 	}
 }
