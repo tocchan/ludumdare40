@@ -54,9 +54,12 @@ MonoBehaviour:
   m_babySpawnTotal: 4
   m_gameDuration: 60
   m_gameOverDuration: 5
+  m_wolfDelayOnStart: 3
   m_preyPrefab: {fileID: 1037198839472234, guid: 44558fdc3bec02d4985e126afcce4d35,
     type: 2}
   m_predatorPrefab: {fileID: 1075774623739236, guid: 7974961eed83e404186ed2f8a6b1b350,
+    type: 2}
+  m_bonePilePrefab: {fileID: 1091650140895490, guid: b18773aa362f62742aec668f6e5dd704,
     type: 2}
   m_gameTimeText: {fileID: 0}
   m_gameOverText: {fileID: 0}
