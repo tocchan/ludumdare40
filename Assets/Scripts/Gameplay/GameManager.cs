@@ -379,10 +379,10 @@ public class GameManager : MonoSingleton<GameManager>
 			aliveIntensity = 1.0f - ((float)aliveCount / 4.0f);  // so, .75f to 0.0f
 			aliveIntensity *= (1.0f - m_targetPitch); // this is 1 when we're fattest, so this speed up only applies if the fox is "fast"
 
-		 float remaining = m_gameDuration - m_gameTimer; 
-		 if (remaining < 30.0f) {
-			timeIntensity = .5f;
-		 }
+         float remaining = m_gameDuration - m_gameTimer; 
+         if (remaining < 10.0f) {
+            timeIntensity = .5f;
+         }
 		}
 
 		float pitch = m_backgroundMusic.pitch;
