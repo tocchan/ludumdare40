@@ -202,7 +202,12 @@ public class GameManager : MonoSingleton<GameManager>
 	//-------------------------------------------------------------------------------------------------
 	private void EnterState(eGameState state)
 	{
-		if(state == eGameState.IN_GAME)
+		if(state == eGameState.WAIT_FOR_READY)
+		{
+			SetBGPitch(1.0f);
+		}
+
+		else if(state == eGameState.IN_GAME)
 		{
 			m_gameTimer = 0.0f;
 			AudioManager.Play(eSoundType.FOX_HOWL);

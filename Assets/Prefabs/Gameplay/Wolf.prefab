@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4884746480683846}
   - component: {fileID: 114120125117407708}
   - component: {fileID: 50171483850057276}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Wolf
   m_TagString: Predator
   m_Icon: {fileID: 0}
@@ -37,7 +37,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4796754224610184}
   - component: {fileID: 58991496406531980}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: AttackArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55,7 +55,7 @@ GameObject:
   - component: {fileID: 212389166432313944}
   - component: {fileID: 95906782450998432}
   - component: {fileID: 114179262396072894}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Visual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -71,7 +71,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4837518171812934}
   - component: {fileID: 58506749409092106}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Collision
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -87,7 +87,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4985583419688654}
   - component: {fileID: 212498075877378722}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Shadow
   m_TagString: Untagged
   m_Icon: {fileID: 0}

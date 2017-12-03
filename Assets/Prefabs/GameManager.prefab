@@ -52,7 +52,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_babySpawnTotal: 4
-  m_gameDuration: 300
+  m_gameDuration: 60
   m_gameOverDuration: 5
   m_preyPrefab: {fileID: 1037198839472234, guid: 44558fdc3bec02d4985e126afcce4d35,
     type: 2}

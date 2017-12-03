@@ -24,8 +24,9 @@ public class PredatorController : MonoBehaviour
 
 
 	//-------------------------------------------------------------------------------------------------
-	public float m_stomachSizeCurrent = 0.0f;
+	private float m_stomachSizeCurrent = 0.0f;
 	private float m_attackTimer = 0.0f;
+	public float m_delayMovement = 0.0f;
 	private Vector2 m_moveCurrent = Vector2.zero;
 	private Vector2 m_movePrevious = Vector2.one;
 	private bool m_moveNeedsUpdate = false;
@@ -162,6 +163,13 @@ public class PredatorController : MonoBehaviour
 	{
 		if(!m_moveNeedsUpdate)
 		{
+			return;
+		}
+
+		//Don't allow movement for delay seconds
+		if(m_delayMovement > 0.0f)
+		{
+			m_delayMovement -= Time.deltaTime;
 			return;
 		}
 

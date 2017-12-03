@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4023814639065872}
   - component: {fileID: 212813805335757790}
   - component: {fileID: 114665021643651818}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Visual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -37,7 +37,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4864406490051808}
   - component: {fileID: 58525785268561036}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,6 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57fbae746bca64f4ebbefd8208956a2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_reference: {fileID: 0}
 --- !u!212 &212813805335757790
 SpriteRenderer:
   m_ObjectHideFlags: 1

@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4720567222294114}
   - component: {fileID: 114658710811833264}
   - component: {fileID: 50112557406053264}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Bunny
   m_TagString: Prey
   m_Icon: {fileID: 0}
@@ -37,7 +37,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4356174728829396}
   - component: {fileID: 58638454185979564}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Collision
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55,7 +55,7 @@ GameObject:
   - component: {fileID: 212080153314246044}
   - component: {fileID: 114082886202134952}
   - component: {fileID: 95296750192174664}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Visual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -71,7 +71,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4119004975784212}
   - component: {fileID: 212923776165718290}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Shadow
   m_TagString: Untagged
   m_Icon: {fileID: 0}

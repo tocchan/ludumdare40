@@ -231,12 +231,12 @@ public class PreyController : MonoBehaviour
 		if(m_isDead)
 		{
 			m_visualReference.GetComponent<SpriteRenderer>().color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
-			m_collisionReference.SetActive(false);
+			m_collisionReference.layer = LayerMask.NameToLayer("Ghost");
 		}
 		else
 		{
 			m_visualReference.GetComponent<SpriteRenderer>().color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-			m_collisionReference.SetActive(true);
+			m_collisionReference.layer = LayerMask.NameToLayer("Living");
 		}
 
 		//Hop animation
@@ -364,6 +364,7 @@ public class PreyController : MonoBehaviour
 		m_netController.SetWolf();
 		GameObject predator = Instantiate(GameManager.GetInstance().m_predatorPrefab, transform.position, transform.rotation);
 		predator.GetComponent<PredatorController>().m_netController = m_netController;
+		predator.GetComponent<PredatorController>().m_delayMovement = 1.0f;
 		Destroy(gameObject);
 	}
 
