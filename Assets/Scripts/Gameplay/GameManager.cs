@@ -21,6 +21,9 @@ public class GameManager : MonoSingleton<GameManager>
 	public static string TAG_PREY = "Prey";
 	public static string TAG_PREDATOR = "Predator";
 	public static string ANIM_RABBIT_HOP = "anim_rabbit_hop";
+	public static string ANIM_WOLF_IDLE = "anim_wolf_idle";
+	public static string ANIM_WOLF_SNIFF = "anim_wolf_sniff";
+	public static string ANIM_WOLF_BITE = "anim_wolf_bite";
 	public static float GAME_Z = -1.0f;
 
 
@@ -132,10 +135,12 @@ public class GameManager : MonoSingleton<GameManager>
 
 
 	//-------------------------------------------------------------------------------------------------
-	// Functions
+	// Unity
 	//-------------------------------------------------------------------------------------------------
 	private void Start()
 	{
+		HopperNetwork.Instance.OnPlayerJoin += AddPlayer;
+		HopperNetwork.Instance.OnPlayerLeave += RemovePlayer;
 		EnterState(m_currentState);
 	}
 
@@ -147,6 +152,16 @@ public class GameManager : MonoSingleton<GameManager>
 	}
 
 
+	//-------------------------------------------------------------------------------------------------
+	private void OnApplicationQuit()
+	{
+		HopperNetwork.Instance.OnPlayerJoin -= AddPlayer;
+		HopperNetwork.Instance.OnPlayerLeave -= RemovePlayer;
+	}
+
+
+	//-------------------------------------------------------------------------------------------------
+	// Functions
 	//-------------------------------------------------------------------------------------------------
 	private void EnterState(eGameState state)
 	{
@@ -162,10 +177,12 @@ public class GameManager : MonoSingleton<GameManager>
 	{
 		if(state == eGameState.WAIT_FOR_READY)
 		{
-			bool isReady = false;
-			if(isReady)
+			bool isReady = HopperNetwork.IsEveryoneReady();
+			bool isEnoughPlayers = HopperNetwork.GetConnectionCount() >= 3;
+			if(isReady && isEnoughPlayers)
 			{
-				//Mark players in game
+				HopperNetwork.StartGame();
+				//Set Wolf
 				ChangeState(eGameState.IN_GAME);
 			}
 		}
@@ -192,7 +209,7 @@ public class GameManager : MonoSingleton<GameManager>
 
 		if(state == eGameState.GAME_OVER)
 		{
-
+			HopperNetwork.EndGame();
 		}
 	}
 

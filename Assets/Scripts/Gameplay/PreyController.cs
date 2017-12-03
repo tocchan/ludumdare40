@@ -44,6 +44,7 @@ public class PreyController : MonoBehaviour
 	//-------------------------------------------------------------------------------------------------
 	[Header("References")]
 	public GameObject m_visualReference;
+	public GameObject m_shadowReference;
 	Rigidbody2D m_rigidbody;
 	Animator m_animator;
 
@@ -129,7 +130,21 @@ public class PreyController : MonoBehaviour
 	//-------------------------------------------------------------------------------------------------
 	private void UpdateInputNet()
 	{
+		if(!IsPlayer())
+		{
+			return;
+		}
 
+		if(m_netController.ActionCount > 0)
+		{
+			m_netController.ConsumeAllActions();
+			Mate();
+		}
+
+		if(m_netController.Movement != Vector2.zero)
+		{
+			Hop(m_netController.Movement);
+		}
 	}
 
 
@@ -137,6 +152,11 @@ public class PreyController : MonoBehaviour
 	private void UpdateInputAI()
 	{
 		if(m_debugControl)
+		{
+			return;
+		}
+
+		if(IsPlayer())
 		{
 			return;
 		}
@@ -186,13 +206,22 @@ public class PreyController : MonoBehaviour
 		if(m_hopDirection.x > 0.0f)
 		{
 			Vector3 scale = m_visualReference.transform.localScale;
-			scale.x = -1.0f;
+			scale.x = -1.0f * Mathf.Abs(scale.x);
 			m_visualReference.transform.localScale = scale;
+
+			scale = m_shadowReference.transform.localScale;
+			scale.x = -1.0f * Mathf.Abs(scale.x);
+			m_shadowReference.transform.localScale = scale;
 		}
 		else
 		{
-			Vector3 scale = Vector3.one;
+			Vector3 scale = m_visualReference.transform.localScale;
+			scale.x = Mathf.Abs(scale.x);
 			m_visualReference.transform.localScale = scale;
+
+			scale = m_visualReference.transform.localScale;
+			scale.x = Mathf.Abs(scale.x);
+			m_shadowReference.transform.localScale = scale;
 		}
 
 		m_animator.Play(GameManager.ANIM_RABBIT_HOP, 0, hopPercent);
