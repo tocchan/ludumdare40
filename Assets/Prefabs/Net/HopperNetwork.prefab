@@ -123,6 +123,10 @@ MonoBehaviour:
   matchSize: 128
   isNetworkActive: 0
   matchMaker: {fileID: 0}
+  LocalControllerPrefab: {fileID: 1716161432490662, guid: dd98b2052e18d3f49a941a6a5c880ef1,
+    type: 2}
+  IsHostScene: 1
+  Discovery: {fileID: 0}
 --- !u!114 &114245973559195042
 MonoBehaviour:
   m_ObjectHideFlags: 1

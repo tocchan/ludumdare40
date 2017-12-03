@@ -15,7 +15,7 @@ public class HostConnectionStatus : MonoBehaviour
    void Start()
    {
       AddressText.text = "Hosting: " + Network.player.ipAddress;
-      ConnectionCountText.text = "Players: " + HopperNetwork.GetConnectionCount();
+      ConnectionCountText.text = "Players: " + GameObject.FindObjectsOfType<VirtualNetworkController>().Length;
 
       HopperNetwork.Instance.OnPlayerJoin += ConnectionsChanged;
       HopperNetwork.Instance.OnPlayerLeave += ConnectionsChanged;
@@ -29,7 +29,7 @@ public class HostConnectionStatus : MonoBehaviour
    void ConnectionsChanged( VirtualNetworkController conn )
    {
       if (ConnectionCountText != null) {
-         ConnectionCountText.text = "Players: " + HopperNetwork.GetConnectionCount();
+         ConnectionCountText.text = "Players: " + GameObject.FindObjectsOfType<VirtualNetworkController>().Length;
       }
    }
 

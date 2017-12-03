@@ -21,6 +21,10 @@ public class HopperNetwork : NetworkManager
    public delegate void DOnPlayerLeave( VirtualNetworkController conn ); 
 
    //-------------------------------------------------------------------
+   public GameObject LocalControllerPrefab; 
+   private LocalController[] LocalControllers = new LocalController[4]; 
+
+   //-------------------------------------------------------------------
    public bool IsHostScene = false; 
    public HopperDiscover Discovery; 
    public DOnPlayerJoin OnPlayerJoin;
@@ -62,6 +66,10 @@ public class HopperNetwork : NetworkManager
       } else if (!isNetworkActive) {
          StartConnecting();
       }
+
+      if (IsHost()) {
+         UpdateLocalControllers(); 
+      }
    }
 
    //-------------------------------------------------------------------
@@ -92,8 +100,32 @@ public class HopperNetwork : NetworkManager
    }
 
    //-------------------------------------------------------------------
+   void UpdateLocalControllers()
+   {
+      for (int i = 0; i < LocalControllers.Length; ++i) {
+         LocalController local = LocalControllers[i]; 
+         if (local == null) {
+            KeyCode join_key = LocalController.GetActionKey(i); 
+            if (Input.GetKeyDown(join_key)) {
+               GameObject go = GameObject.Instantiate(LocalControllerPrefab);
+               local = go.GetComponent<LocalController>();
+               local.GamepadID = i; 
+               LocalControllers[i] = local;
+            }
+         } else {
+            KeyCode leave_key = LocalController.GetCancelKey(i); 
+            if (Input.GetKeyDown(leave_key)) {
+               GameObject.Destroy( local.gameObject ); 
+               LocalControllers[i] = null; 
+            }
+         }
+      }
+   }
+
+   //-------------------------------------------------------------------
    // Statics
    //-------------------------------------------------------------------
+
 
    //-------------------------------------------------------------------
    public string GetLocalAddress()
@@ -130,18 +162,9 @@ public class HopperNetwork : NetworkManager
    }
 
    //-------------------------------------------------------------------
-   public static int GetConnectionCount()
+   public static int GetPlayerCount()
    {
-      NetworkManager mgr = NetworkManager.singleton;
-      if (mgr == null) {
-         return 0;
-      } else {
-         if (NetworkServer.connections.Count > 0) {
-            return NetworkServer.connections.Count - 1; // don't count the server
-         } else {
-            return 0;
-         }
-      }
+      return GameObject.FindObjectsOfType<VirtualNetworkController>().Length; 
    }
 
    //-------------------------------------------------------------------
@@ -235,5 +258,7 @@ public class HopperNetwork : NetworkManager
          return (HopperNetwork)NetworkManager.singleton;
       }
    }
+
+
 }
 

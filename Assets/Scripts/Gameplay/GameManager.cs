@@ -253,7 +253,7 @@ public class GameManager : MonoSingleton<GameManager>
 		if(state == eGameState.WAIT_FOR_READY)
 		{
 			bool isReady = HopperNetwork.IsEveryoneReady();
-			bool isEnoughPlayers = HopperNetwork.GetConnectionCount() >= 3;
+			bool isEnoughPlayers = HopperNetwork.GetPlayerCount() >= 3;
 
 			if(isReady && isEnoughPlayers)
 			{
@@ -407,7 +407,8 @@ public class GameManager : MonoSingleton<GameManager>
 			{
 				if(prey.m_netController == controller)
 				{
-					prey.Eaten();
+               // C4 - ghosts were multiplying really fast
+					GameObject.Destroy(prey.gameObject); 
 					return;
 				}
 			}

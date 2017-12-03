@@ -47,14 +47,18 @@ public class VirtualNetworkController : NetworkBehaviour
    public void SetMovement( Vector2 v )
    {
       Movement = v; 
-      CmdMovement( v ); 
+      if (HopperNetwork.IsClient()) {
+         CmdMovement( v ); 
+      }
    }
    
    //----------------------------------------------------------------------
    public void DoAction()
    {
       ++ActionCount; 
-      CmdAction(); 
+      if (HopperNetwork.IsClient()) {
+         CmdAction(); 
+      }
    }
 
    //----------------------------------------------------------------------
