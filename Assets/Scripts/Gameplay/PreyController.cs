@@ -36,6 +36,9 @@ public class PreyController : MonoBehaviour
 	private float m_moveTimerAI = 0.0f;
 
 	[HideInInspector]
+	public bool m_isDead = false;
+
+	[HideInInspector]
 	public VirtualNetworkController m_netController = null;
 
 
@@ -135,9 +138,9 @@ public class PreyController : MonoBehaviour
 			return;
 		}
 
-		if(m_netController.ActionCount > 0)
+		if(m_netController.ConsumeAllActions())
 		{
-			m_netController.ConsumeAllActions();
+			Debug.Log(name + " wants some fuk");
 			Mate();
 		}
 
@@ -224,6 +227,17 @@ public class PreyController : MonoBehaviour
 			m_shadowReference.transform.localScale = scale;
 		}
 
+		//Dead bunnies are ghost
+		if(m_isDead)
+		{
+			m_visualReference.GetComponent<SpriteRenderer>().color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
+		}
+		else
+		{
+			m_visualReference.GetComponent<SpriteRenderer>().color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+		}
+
+		//Hop animation
 		m_animator.Play(GameManager.ANIM_RABBIT_HOP, 0, hopPercent);
 	}
 
@@ -265,6 +279,22 @@ public class PreyController : MonoBehaviour
 	//-------------------------------------------------------------------------------------------------
 	public void Mate()
 	{
+		Debug.Log("Mate0: " + m_isDead);
+
+		if (m_isDead)
+		{
+			return;
+		}
+
+		Debug.Log("Mate1: " + m_isDead);
+
+		if (GameManager.GetInstance().m_currentState != eGameState.IN_GAME)
+		{
+			return;
+		}
+
+		Debug.Log("Mate2: " + GameManager.GetInstance().m_currentState);
+
 		//Find closest mate
 		PreyController closestPrey = GameManager.GetClosestPrey(this);
 		if(closestPrey != null)
@@ -276,6 +306,8 @@ public class PreyController : MonoBehaviour
 			m_isMating = true;
 			Hop(hopDirection);
 		}
+
+		Debug.Log("Mate3: " + closestPrey);
 	}
 
 
@@ -306,7 +338,14 @@ public class PreyController : MonoBehaviour
 	//-------------------------------------------------------------------------------------------------
 	public void Eaten()
 	{
-		Destroy(gameObject);
+		if(IsPlayer())
+		{
+			m_isDead = true;
+		}
+		else
+		{
+			Destroy(gameObject);
+		}
 	}
 
 
@@ -319,6 +358,16 @@ public class PreyController : MonoBehaviour
 		}
 
 		return m_netController != null;
+	}
+
+
+	//-------------------------------------------------------------------------------------------------
+	public void TransformIntoPredator()
+	{
+		m_netController.RpcSetWolf();
+		GameObject predator = Instantiate(GameManager.GetInstance().m_predatorPrefab, transform.position, transform.rotation);
+		predator.GetComponent<PredatorController>().m_netController = m_netController;
+		Destroy(gameObject);
 	}
 
 

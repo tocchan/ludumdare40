@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 //-------------------------------------------------------------------------------------------------
@@ -42,27 +43,50 @@ public class GameManager : MonoSingleton<GameManager>
 
 
 	//-------------------------------------------------------------------------------------------------
+	[Header("References")]
+	public Text m_gameTimeText;
+
+
+	//-------------------------------------------------------------------------------------------------
 	private float m_gameTimer = 0.0f;
-	private eGameState m_currentState = eGameState.WAIT_FOR_READY;
 	private bool m_preyWins = false;
+
+	[HideInInspector]
+	public eGameState m_currentState = eGameState.WAIT_FOR_READY;
 
 
 	//-------------------------------------------------------------------------------------------------
 	// Static Functions
 	//-------------------------------------------------------------------------------------------------
-	public int GetHumanPreyCount()
+	public PreyController[] GetHumanPrey()
 	{
-		int count = 0;
+		List<PreyController> preyList = new List<PreyController>();
 		GameObject[] preys = GameObject.FindGameObjectsWithTag(TAG_PREY);
 		for (int preyIndex = 0; preyIndex < preys.Length; ++preyIndex)
 		{
 			PreyController prey = preys[preyIndex].GetComponent<PreyController>();
-			if(prey != null)
+			if (prey != null)
 			{
-				if(prey.IsPlayer())
+				if (prey.IsPlayer())
 				{
-					count += 1;
+					preyList.Add(prey);
 				}
+			}
+		}
+		return preyList.ToArray();
+	}
+
+
+	//-------------------------------------------------------------------------------------------------
+	public int GetHumanPreyAliveCount()
+	{
+		int count = 0;
+		PreyController[] preyList = GetHumanPrey();
+		for(int preyIndex = 0; preyIndex < preyList.Length; ++preyIndex)
+		{
+			if (!preyList[preyIndex].m_isDead)
+			{
+				count += 1;
 			}
 		}
 		return count;
@@ -149,6 +173,7 @@ public class GameManager : MonoSingleton<GameManager>
 	private void Update()
 	{
 		UpdateState(m_currentState);
+		UpdateTime();
 	}
 
 
@@ -182,7 +207,7 @@ public class GameManager : MonoSingleton<GameManager>
 			if(isReady && isEnoughPlayers)
 			{
 				HopperNetwork.StartGame();
-				//Set Wolf
+				TransformRandomPrey();
 				ChangeState(eGameState.IN_GAME);
 			}
 		}
@@ -190,7 +215,8 @@ public class GameManager : MonoSingleton<GameManager>
 		if(state == eGameState.IN_GAME)
 		{
 			m_gameTimer += Time.deltaTime;
-			int preyCount = GetHumanPreyCount();
+			int preyCount = GetHumanPreyAliveCount();
+			Debug.Log("Prey Count: " + preyCount);
 
 			//No players left wolf wins
 			if(preyCount == 0)
@@ -210,6 +236,8 @@ public class GameManager : MonoSingleton<GameManager>
 		if(state == eGameState.GAME_OVER)
 		{
 			HopperNetwork.EndGame();
+			ReviveAndTransformBack();
+			ChangeState(eGameState.WAIT_FOR_READY);
 		}
 	}
 
@@ -227,6 +255,20 @@ public class GameManager : MonoSingleton<GameManager>
 		ExitState(m_currentState);
 		m_currentState = state;
 		EnterState(m_currentState);
+	}
+
+	
+	//-------------------------------------------------------------------------------------------------
+	public void UpdateTime()
+	{
+		string timeLabel = "";
+		if(m_currentState == eGameState.IN_GAME)
+		{
+			int seconds = (int)m_gameTimer % 60;
+			int minutes = (int)m_gameTimer / 60;
+			timeLabel = string.Format("{0:0}:{1:00}", minutes, seconds);
+		}
+		m_gameTimeText.text = timeLabel;
 	}
 
 
@@ -271,6 +313,52 @@ public class GameManager : MonoSingleton<GameManager>
 					Destroy(predator);
 					return;
 				}
+			}
+		}
+	}
+
+
+	//-------------------------------------------------------------------------------------------------
+	private void TransformRandomPrey()
+	{
+		//Transform random bunny into wolf
+		PreyController[] humanPrey = GetHumanPrey();
+		int randomPreyIndex = Random.Range(0, humanPrey.Length);
+		humanPrey[randomPreyIndex].TransformIntoPredator();
+	}
+
+
+	//-------------------------------------------------------------------------------------------------
+	private void ReviveAndTransformBack()
+	{
+		//Find controller if it was a prey
+		GameObject[] preys = GameObject.FindGameObjectsWithTag(TAG_PREY);
+		for (int preyIndex = 0; preyIndex < preys.Length; ++preyIndex)
+		{
+			PreyController prey = preys[preyIndex].GetComponent<PreyController>();
+			if (prey != null)
+			{
+				//Revive dead players
+				if (prey.m_netController != null)
+				{
+					prey.m_isDead = false;
+				}
+				//Clear AI
+				else
+				{
+					Destroy(prey.gameObject);
+				}
+			}
+		}
+
+		//Find controller if it was a predator
+		GameObject[] predators = GameObject.FindGameObjectsWithTag(TAG_PREDATOR);
+		for (int predatorIndex = 0; predatorIndex < predators.Length; ++predatorIndex)
+		{
+			PredatorController predator = predators[predatorIndex].GetComponent<PredatorController>();
+			if (predator != null)
+			{
+				predator.TransformIntoPrey();
 			}
 		}
 	}
