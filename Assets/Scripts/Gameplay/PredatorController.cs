@@ -31,6 +31,9 @@ public class PredatorController : MonoBehaviour
 	private bool m_moveNeedsUpdate = false;
 	private bool m_isAttacking = false;
 
+	[HideInInspector]
+	public VirtualNetworkController m_netController;
+
 
 	//-------------------------------------------------------------------------------------------------
 	// References

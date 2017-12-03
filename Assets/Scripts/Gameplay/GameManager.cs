@@ -16,25 +16,54 @@ public enum eGameState
 public class GameManager : MonoSingleton<GameManager>
 {
 	//-------------------------------------------------------------------------------------------------
+	// Static Members
+	//-------------------------------------------------------------------------------------------------
 	public static string TAG_PREY = "Prey";
+	public static string TAG_PREDATOR = "Predator";
 	public static string ANIM_RABBIT_HOP = "anim_rabbit_hop";
 	public static float GAME_Z = -1.0f;
 
 
 	//-------------------------------------------------------------------------------------------------
+	// Members
+	//-------------------------------------------------------------------------------------------------
 	[Header("Settings")]
 	public int m_babySpawnTotal = 4;
-	public float m_gameDuration;
+	public float m_gameDuration = 60.0f * 5.0f; //5 minutes
 
 
 	//-------------------------------------------------------------------------------------------------
 	[Header("Prefabs")]
 	public GameObject m_preyPrefab;
+	public GameObject m_predatorPrefab;
 
 
 	//-------------------------------------------------------------------------------------------------
 	private float m_gameTimer = 0.0f;
 	private eGameState m_currentState = eGameState.WAIT_FOR_READY;
+	private bool m_preyWins = false;
+
+
+	//-------------------------------------------------------------------------------------------------
+	// Static Functions
+	//-------------------------------------------------------------------------------------------------
+	public int GetHumanPreyCount()
+	{
+		int count = 0;
+		GameObject[] preys = GameObject.FindGameObjectsWithTag(TAG_PREY);
+		for (int preyIndex = 0; preyIndex < preys.Length; ++preyIndex)
+		{
+			PreyController prey = preys[preyIndex].GetComponent<PreyController>();
+			if(prey != null)
+			{
+				if(prey.IsPlayer())
+				{
+					count += 1;
+				}
+			}
+		}
+		return count;
+	}
 
 
 	//-------------------------------------------------------------------------------------------------
@@ -103,9 +132,11 @@ public class GameManager : MonoSingleton<GameManager>
 
 
 	//-------------------------------------------------------------------------------------------------
+	// Functions
+	//-------------------------------------------------------------------------------------------------
 	private void Start()
 	{
-
+		EnterState(m_currentState);
 	}
 
 
@@ -119,14 +150,50 @@ public class GameManager : MonoSingleton<GameManager>
 	//-------------------------------------------------------------------------------------------------
 	private void EnterState(eGameState state)
 	{
-
+		if(state == eGameState.IN_GAME)
+		{
+			m_gameTimer = 0.0f;
+		}
 	}
 
 
 	//-------------------------------------------------------------------------------------------------
 	private void UpdateState(eGameState state)
 	{
+		if(state == eGameState.WAIT_FOR_READY)
+		{
+			bool isReady = false;
+			if(isReady)
+			{
+				//Mark players in game
+				ChangeState(eGameState.IN_GAME);
+			}
+		}
 
+		if(state == eGameState.IN_GAME)
+		{
+			m_gameTimer += Time.deltaTime;
+			int preyCount = GetHumanPreyCount();
+
+			//No players left wolf wins
+			if(preyCount == 0)
+			{
+				m_preyWins = true;
+				ChangeState(eGameState.GAME_OVER);
+			}
+
+			//Times up, bunnies win
+			if(m_gameTimer >= m_gameDuration)
+			{
+				m_preyWins = false;
+				ChangeState(eGameState.GAME_OVER);
+			}
+		}
+
+		if(state == eGameState.GAME_OVER)
+		{
+
+		}
 	}
 
 
@@ -134,5 +201,60 @@ public class GameManager : MonoSingleton<GameManager>
 	private void ExitState(eGameState state)
 	{
 
+	}
+
+
+	//-------------------------------------------------------------------------------------------------
+	private void ChangeState(eGameState state)
+	{
+		ExitState(m_currentState);
+		m_currentState = state;
+		EnterState(m_currentState);
+	}
+
+
+	//-------------------------------------------------------------------------------------------------
+	private void AddPlayer(VirtualNetworkController controller)
+	{
+		Vector3 spawnLocation = Vector3.zero;
+		spawnLocation.z = GAME_Z;
+		GameObject preyObject = Instantiate(m_preyPrefab, spawnLocation, Quaternion.identity);
+		PreyController prey = preyObject.GetComponent<PreyController>();
+		prey.m_netController = controller;
+	}
+
+
+	//-------------------------------------------------------------------------------------------------
+	private void RemovePlayer(VirtualNetworkController controller)
+	{
+		//Find controller if it was a prey
+		GameObject[] preys = GameObject.FindGameObjectsWithTag(TAG_PREY);
+		for(int preyIndex = 0; preyIndex < preys.Length; ++preyIndex)
+		{
+			PreyController prey = preys[preyIndex].GetComponent<PreyController>();
+			if(prey != null)
+			{
+				if(prey.m_netController == controller)
+				{
+					prey.Eaten();
+					return;
+				}
+			}
+		}
+
+		//Find controller if it was a predator
+		GameObject[] predators = GameObject.FindGameObjectsWithTag(TAG_PREDATOR);
+		for (int predatorIndex = 0; predatorIndex < predators.Length; ++predatorIndex)
+		{
+			PredatorController predator = predators[predatorIndex].GetComponent<PredatorController>();
+			if (predator != null)
+			{
+				if (predator.m_netController == controller)
+				{
+					Destroy(predator);
+					return;
+				}
+			}
+		}
 	}
 }
