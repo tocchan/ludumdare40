@@ -51,6 +51,8 @@ public class PreyController : MonoBehaviour
 	public GameObject m_collisionReference;
 	Rigidbody2D m_rigidbody;
 	Animator m_animator;
+   public GameObject m_deathEffect;  
+
 
 
 	//-------------------------------------------------------------------------------------------------
@@ -345,6 +347,10 @@ public class PreyController : MonoBehaviour
 
 		//Spawn bone pile
 		Instantiate(GameManager.GetInstance().m_bonePilePrefab, transform.position, transform.rotation);
+
+      if (m_deathEffect != null) {
+         Instantiate( m_deathEffect, transform.position, Quaternion.identity );
+      }
 
 		//Handle death
 		if(IsPlayer())
