@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 [RequireComponent(typeof(HopperDiscover))]
 public class HopperNetwork : NetworkManager
 {
+   //-------------------------------------------------------------------
    public enum eState
    {
       DISCONNECTED,
@@ -15,14 +16,17 @@ public class HopperNetwork : NetworkManager
       CLIENT_READY, 
    };
 
+   //-------------------------------------------------------------------
    public delegate void DOnPlayerJoin( VirtualNetworkController conn );
    public delegate void DOnPlayerLeave( VirtualNetworkController conn ); 
 
+   //-------------------------------------------------------------------
    public bool IsHostScene = false; 
    public HopperDiscover Discovery; 
    public DOnPlayerJoin OnPlayerJoin;
    public DOnPlayerLeave OnPlayerLeave; 
 
+   //-------------------------------------------------------------------
    public void Start()
    {
       Discovery = GetComponent<HopperDiscover>();
@@ -33,6 +37,7 @@ public class HopperNetwork : NetworkManager
       StartConnecting();
    }
 
+   //-------------------------------------------------------------------
    void StartConnecting()
    {
       Discovery.Initialize();
@@ -46,6 +51,7 @@ public class HopperNetwork : NetworkManager
       }
    }
 
+   //-------------------------------------------------------------------
    public void Update()
    {
       if (Discovery.IsRunning()) {
@@ -58,34 +64,40 @@ public class HopperNetwork : NetworkManager
       }
    }
 
+   //-------------------------------------------------------------------
    public override void OnServerConnect( NetworkConnection conn )
    {
       Debug.Log( "Client Connected to Server: " + conn.address ); 
       base.OnServerConnect(conn); 
    }
 
+   //-------------------------------------------------------------------
    public override void OnServerReady( NetworkConnection conn )
    {
       Debug.Log( "Client is Ready: " + conn.address ); 
       base.OnServerReady(conn); 
    }
 
+   //-------------------------------------------------------------------
    public override void OnServerDisconnect(NetworkConnection conn)
    {
       base.OnServerDisconnect(conn);
    }
 
+   //-------------------------------------------------------------------
    public override void OnClientConnect( NetworkConnection conn )
    {
       Debug.Log( "Client connected successful" ); 
       base.OnClientConnect(conn); 
    }
 
+   //-------------------------------------------------------------------
    public string GetLocalAddress()
    {
       return Network.player.ipAddress;
    }
 
+   //-------------------------------------------------------------------
    public static bool IsHost()
    {
       NetworkManager mgr = NetworkManager.singleton;
@@ -96,6 +108,7 @@ public class HopperNetwork : NetworkManager
       return (NetworkServer.active); 
    }
 
+   //-------------------------------------------------------------------
    public static NetworkConnection GetMyConnection()
    {
       NetworkClient client = NetworkManager.singleton.client; 
@@ -106,6 +119,7 @@ public class HopperNetwork : NetworkManager
       return null; 
    }
 
+   //-------------------------------------------------------------------
    public static int GetConnectionCount()
    {
       NetworkManager mgr = NetworkManager.singleton;
@@ -131,6 +145,7 @@ public class HopperNetwork : NetworkManager
       return null; 
    }
 
+   //-------------------------------------------------------------------
    public static eState GetState()
    {
       HopperNetwork net = (HopperNetwork) NetworkManager.singleton;
@@ -158,6 +173,20 @@ public class HopperNetwork : NetworkManager
       }
    }
    
+   //-------------------------------------------------------------------
+   public static int GetReadyCount()
+   {
+      int count = 0; 
+      var objects = GameObject.FindObjectsOfType<VirtualNetworkController>(); 
+      for (int i = 0; i < objects.Length; ++i) {
+         if (objects[i].ClientIsReady) {
+            ++count; 
+         }
+      }
+
+      return count; 
+   }
+
    //-------------------------------------------------------------------
    public static bool IsEveryoneReady()
    {
