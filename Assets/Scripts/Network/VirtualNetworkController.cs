@@ -115,7 +115,6 @@ public class VirtualNetworkController : NetworkBehaviour
       IsPresentInGame = inGame;
       if (!inGame) {
          ConsumeAllActions(); 
-         ClientIsReady = false; 
          IsWolf = false; 
          IsDead = false; 
       }
@@ -188,7 +187,7 @@ public class VirtualNetworkController : NetworkBehaviour
       IsPresentInGame = inGame;
       ConsumeAllActions(); // get rid of all actions;  
       if (!inGame) {
-         ClientIsReady = false; 
+         SetReady(false);
          IsWolf = false; 
          IsDead = false; 
       }
