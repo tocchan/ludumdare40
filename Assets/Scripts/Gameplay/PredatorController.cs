@@ -12,7 +12,7 @@ public class PredatorController : MonoBehaviour
 	[Header("Settings")]
 	public float m_moveSpeedMax = 5.0f;
 	public float m_moveSpeedMin = 1.0f;
-   public AnimationCurve m_moveSpeedCurve = AnimationCurve.Linear(0, 0, 1, 1); 
+	public AnimationCurve m_moveSpeedCurve = AnimationCurve.Linear(0, 0, 1, 1); 
 	public float m_stomachSizeMax = 3.0f;
 	public float m_foodSizeBunny = 1.0f;
 	public float m_foodDigestSpeed = 1.0f;
@@ -44,6 +44,7 @@ public class PredatorController : MonoBehaviour
 	//-------------------------------------------------------------------------------------------------
 	[Header("References")]
 	public GameObject m_attackAreaReference;
+	public SpriteRenderer m_attackBiteReference;
 	public GameObject m_visualReference;
 	public GameObject m_shadowReference;
 	Rigidbody2D m_rigidbody;
@@ -186,7 +187,7 @@ public class PredatorController : MonoBehaviour
 		}
 
 		//Get move speed from stomach
-	  float moveLerp = m_moveSpeedCurve.Evaluate( Mathf.Clamp01(1.0f - GetStomachPercent()) ); 
+		float moveLerp = m_moveSpeedCurve.Evaluate( Mathf.Clamp01(1.0f - GetStomachPercent()) ); 
 		float moveSpeed = Mathf.Lerp(m_moveSpeedMin, m_moveSpeedMax, moveLerp);
 
 		//Move predator
@@ -237,7 +238,7 @@ public class PredatorController : MonoBehaviour
 
 					if (m_isFirstPrey) {
 						AudioManager.Play(eSoundType.FOX_EAT);
-				  AudioManager.Play(eSoundType.BUNNY_SCREAM); 
+						AudioManager.Play(eSoundType.BUNNY_SCREAM); 
 						m_isFirstPrey = false;
 					}
 
@@ -255,8 +256,19 @@ public class PredatorController : MonoBehaviour
 		else
 		{
 			//Update attack area location
-			float attackAreaOffset = 0.5f;
+			float attackAreaOffset = 0.75f;
 			m_attackAreaReference.transform.localPosition = m_movePrevious * attackAreaOffset;
+			m_attackAreaReference.transform.rotation = Quaternion.Euler(0.0f, 0.0f, Mathf.Rad2Deg * Mathf.Atan2(m_movePrevious.y, m_movePrevious.x));
+		}
+
+		if(m_isAttacking)
+		{
+			float attackAlpha = (m_attackDuration - m_attackTimer) / m_attackDuration;
+			m_attackBiteReference.color = new Color(1.0f, 1.0f, 1.0f, Mathf.Sqrt(attackAlpha));
+		}
+		else
+		{
+			m_attackBiteReference.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
 		}
 	}
 
@@ -324,6 +336,26 @@ public class PredatorController : MonoBehaviour
 		{
 			m_animator.Play(GameManager.ANIM_WOLF_IDLE, 0, 0.0f);
 		}
+
+		//Faded when delayed
+		if(m_delayMovement > 0.0f)
+		{
+			m_visualReference.GetComponent<SpriteRenderer>().color = new Color(1.0f,1.0f,1.0f,0.5f);
+		}
+		else
+		{
+			m_visualReference.GetComponent<SpriteRenderer>().color = Color.white;
+		}
+
+		//Can't be pushed while a ghost
+		//if(m_delayMovement > 0.0f)
+		//{
+		//	gameObject.layer = LayerMask.NameToLayer(GameManager.LAYER_GHOST);
+		//}
+		//else
+		//{
+		//	gameObject.layer = LayerMask.NameToLayer(GameManager.LAYER_LIVING);
+		//}
 	}
 
 
@@ -353,6 +385,11 @@ public class PredatorController : MonoBehaviour
 		}
 
 		if(GameManager.GetInstance().m_currentState == eGameState.GAME_OVER)
+		{
+			return;
+		}
+
+		if(m_delayMovement > 0.0f)
 		{
 			return;
 		}

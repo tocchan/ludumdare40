@@ -348,9 +348,9 @@ public class PreyController : MonoBehaviour
 		//Spawn bone pile
 		Instantiate(GameManager.GetInstance().m_bonePilePrefab, transform.position, transform.rotation);
 
-      if (m_deathEffect != null) {
-         Instantiate( m_deathEffect, transform.position, Quaternion.identity );
-      }
+	  if (m_deathEffect != null) {
+		 Instantiate( m_deathEffect, transform.position, Quaternion.identity );
+	  }
 
 		//Handle death
 		if(IsPlayer())
@@ -384,6 +384,13 @@ public class PreyController : MonoBehaviour
 		predator.GetComponent<PredatorController>().m_netController = m_netController;
 		predator.GetComponent<PredatorController>().m_delayMovement = GameManager.GetInstance().m_wolfDelayOnStart;
 		Destroy(gameObject);
+	}
+
+
+	//-------------------------------------------------------------------------------------------------
+	private void OnCollisionStay2D(Collision2D collision)
+	{
+		OnCollisionEnter2D(collision);
 	}
 
 
