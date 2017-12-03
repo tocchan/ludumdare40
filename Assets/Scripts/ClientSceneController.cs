@@ -89,6 +89,7 @@ public class ClientSceneController : MonoBehaviour
          return;
       }
 
+      Debug.Log( "GOT'EM" ); 
       IsReady = !IsReady; 
       Controller.CmdSetReady(IsReady); 
       // do something else; 

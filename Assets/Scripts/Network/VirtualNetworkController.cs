@@ -16,12 +16,16 @@ public class VirtualNetworkController : NetworkBehaviour
 
    private void Start()
    {
-      HopperNetwork.Instance.OnPlayerJoin(this); 
+      if (HopperNetwork.Instance.OnPlayerJoin != null) {
+         HopperNetwork.Instance.OnPlayerJoin(this); 
+      }
    }
 
    private void OnDestroy()
    {
-      HopperNetwork.Instance.OnPlayerLeave(this); 
+      if (HopperNetwork.Instance.OnPlayerLeave != null) {
+         HopperNetwork.Instance.OnPlayerLeave(this); 
+      }
    }
 
 
