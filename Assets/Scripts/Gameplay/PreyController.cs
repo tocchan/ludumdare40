@@ -403,7 +403,7 @@ public class PreyController : MonoBehaviour
 			{
 				SpawnBabiesWith(hitPrey);
 			}
-			else
+			else if (m_isMating) 
 			{
 				AudioManager.Play(eSoundType.BUNNY_BUMP);
 			}
