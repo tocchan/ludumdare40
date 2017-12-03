@@ -34,6 +34,7 @@ public class ClientSceneController : MonoBehaviour
    //-------------------------------------------------------------------
    public void Start()
    {
+      Application.runInBackground = true; 
       SetState( eClientState.DISCOVER ); 
    }
 

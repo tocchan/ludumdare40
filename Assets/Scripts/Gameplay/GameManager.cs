@@ -174,6 +174,8 @@ public class GameManager : MonoSingleton<GameManager>
 	//-------------------------------------------------------------------------------------------------
 	private void Start()
 	{
+      Application.runInBackground = true; 
+
 		HopperNetwork.Instance.OnPlayerJoin += AddPlayer;
 		HopperNetwork.Instance.OnPlayerLeave += RemovePlayer;
 		EnterState(m_currentState);
