@@ -95,6 +95,12 @@ public class VirtualNetworkController : NetworkBehaviour
       return IsPresentInGame; 
    }
 
+   //----------------------------------------------------------------------
+   public void SetReady( bool ready )
+   {
+      ClientIsReady = ready;
+      CmdSetReady(ready); 
+   }
 
    //----------------------------------------------------------------------
    // Commands

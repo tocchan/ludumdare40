@@ -112,7 +112,7 @@ public class ClientSceneController : MonoBehaviour
       }
 
       IsReady = !IsReady; 
-      Controller.CmdSetReady(IsReady); 
+      Controller.SetReady(IsReady);  
    }
 
    //-------------------------------------------------------------------
