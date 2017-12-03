@@ -356,6 +356,7 @@ public class PreyController : MonoBehaviour
 		if(IsPlayer())
 		{
 			m_isDead = true;
+         m_netController.SetDead(); 
 		}
 		else
 		{
