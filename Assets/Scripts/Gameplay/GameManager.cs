@@ -22,6 +22,8 @@ public class GameManager : MonoSingleton<GameManager>
 	public static string TAG_PREY = "Prey";
 	public static string TAG_PREDATOR = "Predator";
 	public static string TAG_BONEPILE = "Bones";
+	public static string LAYER_GHOST = "Ghost";
+	public static string LAYER_LIVING = "Living";
 	public static string ANIM_RABBIT_HOP = "anim_rabbit_hop";
 	public static string ANIM_WOLF_IDLE = "anim_wolf_idle";
 	public static string ANIM_WOLF_WALK = "anim_wolf_walk";
@@ -241,19 +243,18 @@ public class GameManager : MonoSingleton<GameManager>
 		if(state == eGameState.WAIT_FOR_READY)
 		{
 			SetTargetBGPitch(.5f);
+			ClearBonePiles();
 		}
 
 		else if(state == eGameState.IN_GAME)
 		{
 			m_gameTimer = 0.0f;
 			AudioManager.Play(eSoundType.FOX_HOWL);
-			//SpawnAdditionalPrey();
 		}
 
 		else if(state == eGameState.GAME_OVER)
 		{
 			m_gameOverTimer = 0.0f;
-			ClearBonePiles();
 		}
 	}
 
@@ -364,13 +365,13 @@ public class GameManager : MonoSingleton<GameManager>
 	//-------------------------------------------------------------------------------------------------
 	private void UpdateMusic()
 	{
-      if (Time.time < 1.0f) {
-         m_backgroundMusic.volume = 0.0f;
-         return; 
-      }
+	  if (Time.time < 1.0f) {
+		 m_backgroundMusic.volume = 0.0f;
+		 return; 
+	  }
 
 		float aliveIntensity = 0.0f; 
-      float timeIntensity = 0.0f; 
+	  float timeIntensity = 0.0f; 
 		if (m_currentState == eGameState.IN_GAME) {
 			// up pitch based on bunny count alive; 
 			int aliveCount = GetHumanPreyAliveCount(); 
@@ -378,10 +379,10 @@ public class GameManager : MonoSingleton<GameManager>
 			aliveIntensity = 1.0f - ((float)aliveCount / 4.0f);  // so, .75f to 0.0f
 			aliveIntensity *= (1.0f - m_targetPitch); // this is 1 when we're fattest, so this speed up only applies if the fox is "fast"
 
-         float remaining = m_gameDuration - m_gameTimer; 
-         if (remaining < 30.0f) {
-            timeIntensity = .5f;
-         }
+		 float remaining = m_gameDuration - m_gameTimer; 
+		 if (remaining < 30.0f) {
+			timeIntensity = .5f;
+		 }
 		}
 
 		float pitch = m_backgroundMusic.pitch;
