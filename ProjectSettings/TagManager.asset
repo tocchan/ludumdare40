@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Prey
   - Predator
+  - Bones
   layers:
   - Default
   - TransparentFX

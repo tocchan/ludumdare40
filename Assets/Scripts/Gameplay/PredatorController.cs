@@ -82,18 +82,18 @@ public class PredatorController : MonoBehaviour
 	{
 		m_animator.SetFloat("WeightPercent", GetStomachPercent());
 
-      float cur_size = m_stomachSizeCurrent; 
+	  float cur_size = m_stomachSizeCurrent; 
 		m_stomachSizeCurrent -= Time.deltaTime * m_foodDigestSpeed;
 		m_stomachSizeCurrent = Mathf.Clamp(m_stomachSizeCurrent, 0.0f, m_stomachSizeMax);
 
-      if ((cur_size > 0.0f) && (m_stomachSizeCurrent == 0.0f)) 
-      {
-         AudioManager.Play( eSoundType.FOX_ANGRY ); 
-      }
-      else if (m_stomachSizeCurrent == m_stomachSizeMax)
-      {
-         AudioManager.Play( eSoundType.FOX_EXHAUSTED ); 
-      }
+	  if ((cur_size > 0.0f) && (m_stomachSizeCurrent == 0.0f)) 
+	  {
+		 AudioManager.Play( eSoundType.FOX_ANGRY ); 
+	  }
+	  else if (m_stomachSizeCurrent == m_stomachSizeMax)
+	  {
+		 AudioManager.Play( eSoundType.FOX_EXHAUSTED ); 
+	  }
 	}
 
 
@@ -235,12 +235,12 @@ public class PredatorController : MonoBehaviour
 
 					if (m_isFirstPrey) {
 						AudioManager.Play(eSoundType.FOX_EAT);
-                  AudioManager.Play(eSoundType.BUNNY_SCREAM); 
+				  AudioManager.Play(eSoundType.BUNNY_SCREAM); 
 						m_isFirstPrey = false;
 					}
 
 					attackedPrey.Eaten();
-               IncreaseStomachSize( m_foodSizeBunny ); 
+					IncreaseStomachSize( m_foodSizeBunny ); 
 				}
 			}
 
@@ -259,25 +259,25 @@ public class PredatorController : MonoBehaviour
 	}
 
 	//-------------------------------------------------------------------------------------------------
-   void IncreaseStomachSize( float amount )
-   {
-      float prev_size = m_stomachSizeCurrent; 
+	void IncreaseStomachSize( float amount )
+	{
+		float prev_size = m_stomachSizeCurrent; 
 		m_stomachSizeCurrent += amount; 
 
-      if ((prev_size < 1.0f) && (m_stomachSizeCurrent >= 1.0f)) 
-      {
-         // 50% chance to make a happy sound
-         if (Random.value > .5f) {
-            Invoke( "PlayHappySound", Random.Range( .5f, 1.5f ) ); 
-         }
-      }
-   }
+		if ((prev_size < 1.0f) && (m_stomachSizeCurrent >= 1.0f)) 
+		{
+			// 50% chance to make a happy sound
+			if (Random.value > .5f) {
+			Invoke( "PlayHappySound", Random.Range( .5f, 1.5f ) ); 
+			}
+		}
+	}
 
 	//-------------------------------------------------------------------------------------------------
-   void PlayHappySound()
-   {
-      AudioManager.Play( eSoundType.FOX_HAPPY ); 
-   }
+	void PlayHappySound()
+	{
+		AudioManager.Play(eSoundType.FOX_HAPPY);
+	}
 
 	//-------------------------------------------------------------------------------------------------
 	private void UpdateVisual()

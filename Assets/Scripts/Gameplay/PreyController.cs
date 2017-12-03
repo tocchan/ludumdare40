@@ -228,7 +228,7 @@ public class PreyController : MonoBehaviour
 		}
 
 		//Dead bunnies are ghost
-      m_shadowReference.SetActive( !m_isDead ); 
+		m_shadowReference.SetActive( !m_isDead ); 
 		if(m_isDead)
 		{
 			m_visualReference.GetComponent<SpriteRenderer>().color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
@@ -335,7 +335,13 @@ public class PreyController : MonoBehaviour
 	//-------------------------------------------------------------------------------------------------
 	public void Eaten()
 	{
+		//Death sound
 		AudioManager.Play(eSoundType.BUNNY_DEATH);
+
+		//Spawn bone pile
+		Instantiate(GameManager.GetInstance().m_bonePilePrefab, transform.position, transform.rotation);
+
+		//Handle death
 		if(IsPlayer())
 		{
 			m_isDead = true;
@@ -365,7 +371,7 @@ public class PreyController : MonoBehaviour
 		m_netController.SetWolf();
 		GameObject predator = Instantiate(GameManager.GetInstance().m_predatorPrefab, transform.position, transform.rotation);
 		predator.GetComponent<PredatorController>().m_netController = m_netController;
-		predator.GetComponent<PredatorController>().m_delayMovement = 1.0f;
+		predator.GetComponent<PredatorController>().m_delayMovement = GameManager.GetInstance().m_wolfDelayOnStart;
 		Destroy(gameObject);
 	}
 
@@ -374,7 +380,7 @@ public class PreyController : MonoBehaviour
 	private void OnCollisionEnter2D(Collision2D other)
 	{
 		GameObject hitObject = other.gameObject;
-		if(IsPlayer())
+		if (IsPlayer())
 		{
 			PreyController hitPrey = hitObject.GetComponent<PreyController>();
 			if (hitPrey == null)
@@ -385,11 +391,11 @@ public class PreyController : MonoBehaviour
 			if (hitPrey.IsPlayer())
 			{
 				SpawnBabiesWith(hitPrey);
-			} 
-         else 
-         {
-            AudioManager.Play( eSoundType.BUNNY_BUMP ); 
-         }
+			}
+			else
+			{
+				AudioManager.Play(eSoundType.BUNNY_BUMP);
+			}
 		}
 	}
 }

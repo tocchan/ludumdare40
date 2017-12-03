@@ -21,6 +21,7 @@ public class GameManager : MonoSingleton<GameManager>
 	//-------------------------------------------------------------------------------------------------
 	public static string TAG_PREY = "Prey";
 	public static string TAG_PREDATOR = "Predator";
+	public static string TAG_BONEPILE = "Bones";
 	public static string ANIM_RABBIT_HOP = "anim_rabbit_hop";
 	public static string ANIM_WOLF_IDLE = "anim_wolf_idle";
 	public static string ANIM_WOLF_WALK = "anim_wolf_walk";
@@ -35,12 +36,14 @@ public class GameManager : MonoSingleton<GameManager>
 	public int m_babySpawnTotal = 4;
 	public float m_gameDuration = 60.0f * 5.0f;
 	public float m_gameOverDuration = 10.0f;
+	public float m_wolfDelayOnStart = 3.0f;
 
 
 	//-------------------------------------------------------------------------------------------------
 	[Header("Prefabs")]
 	public GameObject m_preyPrefab;
 	public GameObject m_predatorPrefab;
+	public GameObject m_bonePilePrefab;
 
 
 	//-------------------------------------------------------------------------------------------------
@@ -49,11 +52,12 @@ public class GameManager : MonoSingleton<GameManager>
 	public Text m_gameOverText;
 
 	public AudioSource m_backgroundMusic;
-   public AnimationCurve m_pitchCurve = AnimationCurve.Linear(0, 0, 1, 1); 
+	public AnimationCurve m_pitchCurve = AnimationCurve.Linear(0, 0, 1, 1); 
 
-   [HideInInspector]
-   public float m_targetPitch = .5f; 
-   public float m_targetVolume = 1.0f; 
+	[HideInInspector]
+	public float m_targetPitch = .5f;
+	[HideInInspector]
+	public float m_targetVolume = 1.0f; 
 
 
 	//-------------------------------------------------------------------------------------------------
@@ -71,18 +75,20 @@ public class GameManager : MonoSingleton<GameManager>
 		m_backgroundMusic.pitch = pitch;
 	}
 
-	//-------------------------------------------------------------------------------------------------
-   public void SetTargetBGPitch( float lerpValue )
-   {
-      lerpValue = Mathf.Clamp01( lerpValue ); 
-      m_targetPitch = lerpValue; 
-   }
 
 	//-------------------------------------------------------------------------------------------------
-   public void SetTargetVolume( float volume )
-   {
-      m_targetVolume = Mathf.Clamp01(volume); 
-   }
+	public void SetTargetBGPitch( float lerpValue )
+	{
+		lerpValue = Mathf.Clamp01( lerpValue ); 
+		m_targetPitch = lerpValue; 
+	}
+
+
+	//-------------------------------------------------------------------------------------------------
+	public void SetTargetVolume(float volume)
+	{
+		m_targetVolume = Mathf.Clamp01(volume);
+	}
 
 
 	//-------------------------------------------------------------------------------------------------
@@ -104,6 +110,7 @@ public class GameManager : MonoSingleton<GameManager>
 		return preyList.ToArray();
 	}
 
+
 	//-------------------------------------------------------------------------------------------------
 	public int GetHumanPreyAliveCount()
 	{
@@ -118,12 +125,14 @@ public class GameManager : MonoSingleton<GameManager>
 		}
 		return count;
 	}
+	
 
 	//-------------------------------------------------------------------------------------------------
-   public int GetPreyAliveCount()
-   {
+	public int GetPreyAliveCount()
+	{
 		return GameObject.FindGameObjectsWithTag(TAG_PREY).Length;
-   }
+	}
+
 
 	//-------------------------------------------------------------------------------------------------
 	public static PreyController GetClosestPrey(PreyController fromPrey)
@@ -195,13 +204,13 @@ public class GameManager : MonoSingleton<GameManager>
 	//-------------------------------------------------------------------------------------------------
 	private void Start()
 	{
-      Application.runInBackground = true; 
+		Application.runInBackground = true; 
 
 		HopperNetwork.Instance.OnPlayerJoin += AddPlayer;
 		HopperNetwork.Instance.OnPlayerLeave += RemovePlayer;
 		EnterState(m_currentState);
 
-      SetTargetBGPitch(.5f); 
+		SetTargetBGPitch(.5f); 
 	}
 
 
@@ -211,7 +220,7 @@ public class GameManager : MonoSingleton<GameManager>
 		UpdateState(m_currentState);
 		UpdateTimeLabel();
 		UpdateGameOverLabel();
-      UpdateMusic(); 
+		UpdateMusic(); 
 	}
 
 
@@ -243,6 +252,7 @@ public class GameManager : MonoSingleton<GameManager>
 		else if(state == eGameState.GAME_OVER)
 		{
 			m_gameOverTimer = 0.0f;
+			ClearBonePiles();
 		}
 	}
 
@@ -351,30 +361,30 @@ public class GameManager : MonoSingleton<GameManager>
 	}
 
 	//-------------------------------------------------------------------------------------------------
-   private void UpdateMusic()
-   {
-      float aliveIntensity = 0.0f; 
-      if (m_currentState == eGameState.IN_GAME) {
-         // up pitch based on bunny count alive; 
-         int aliveCount = GetHumanPreyAliveCount(); 
-         aliveCount = Mathf.Clamp( aliveCount, 1, 4 ); 
-         aliveIntensity = 1.0f - ((float)aliveCount / 4.0f);  // so, .75f to 0.0f
-         aliveIntensity *= (1.0f - m_targetPitch); // this is 1 when we're fattest, so this speed up only applies if the fox is "fast"
-      }
+	private void UpdateMusic()
+	{
+		float aliveIntensity = 0.0f; 
+		if (m_currentState == eGameState.IN_GAME) {
+			// up pitch based on bunny count alive; 
+			int aliveCount = GetHumanPreyAliveCount(); 
+			aliveCount = Mathf.Clamp( aliveCount, 1, 4 ); 
+			aliveIntensity = 1.0f - ((float)aliveCount / 4.0f);  // so, .75f to 0.0f
+			aliveIntensity *= (1.0f - m_targetPitch); // this is 1 when we're fattest, so this speed up only applies if the fox is "fast"
+		}
 
-      float pitch = m_backgroundMusic.pitch;
-      float volume = m_backgroundMusic.volume; 
+		float pitch = m_backgroundMusic.pitch;
+		float volume = m_backgroundMusic.volume; 
 
-      float dt = Time.deltaTime;
-      float lerpValue = Mathf.Clamp( Mathf.Pow( dt * 8.0f, 1.5f ), 0, .2f ); 
+		float dt = Time.deltaTime;
+		float lerpValue = Mathf.Clamp( Mathf.Pow( dt * 8.0f, 1.5f ), 0, .2f ); 
 
-      float targetPitch = m_pitchCurve.Evaluate(m_targetPitch) + aliveIntensity; 
-      pitch = Mathf.Lerp( pitch, targetPitch, lerpValue );
-      volume = Mathf.Lerp( volume, m_targetVolume, lerpValue ); 
+		float targetPitch = m_pitchCurve.Evaluate(m_targetPitch) + aliveIntensity; 
+		pitch = Mathf.Lerp( pitch, targetPitch, lerpValue );
+		volume = Mathf.Lerp( volume, m_targetVolume, lerpValue ); 
 
-      m_backgroundMusic.pitch = pitch;
-      m_backgroundMusic.volume = volume; 
-   }
+		m_backgroundMusic.pitch = pitch;
+		m_backgroundMusic.volume = volume; 
+	}
 
 
 	//-------------------------------------------------------------------------------------------------
@@ -407,7 +417,7 @@ public class GameManager : MonoSingleton<GameManager>
 			{
 				if(prey.m_netController == controller)
 				{
-               // C4 - ghosts were multiplying really fast
+			   // C4 - ghosts were multiplying really fast
 					GameObject.Destroy(prey.gameObject); 
 					return;
 				}
@@ -485,6 +495,17 @@ public class GameManager : MonoSingleton<GameManager>
 			{
 				predator.TransformIntoPrey();
 			}
+		}
+	}
+
+
+	//-------------------------------------------------------------------------------------------------
+	private void ClearBonePiles()
+	{
+		GameObject[] bonePiles = GameObject.FindGameObjectsWithTag(TAG_BONEPILE);
+		for (int boneIndex = 0; boneIndex < bonePiles.Length; ++boneIndex)
+		{
+
 		}
 	}
 }
