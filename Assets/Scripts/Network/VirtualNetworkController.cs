@@ -151,6 +151,12 @@ public class VirtualNetworkController : NetworkBehaviour
    }
 
    //----------------------------------------------------------------------
+   public void PlaySoundOnPhone( eSoundType type )
+   {
+      RpcPlaySound(type);
+   }
+
+   //----------------------------------------------------------------------
    // Commands
    //----------------------------------------------------------------------
    //----------------------------------------------------------------------
@@ -202,6 +208,13 @@ public class VirtualNetworkController : NetworkBehaviour
          IsWolf = false; 
          IsDead = false; 
       }
+   }
+
+   //----------------------------------------------------------------------
+   [ClientRpc(channel = 0)]
+   public void RpcPlaySound( eSoundType type )
+   {
+      AudioManager.Play(type);
    }
 }
 

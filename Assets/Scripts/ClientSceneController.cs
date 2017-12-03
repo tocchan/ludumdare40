@@ -25,6 +25,8 @@ public class ClientSceneController : MonoBehaviour
    public Sprite BunnyAction;
    public Sprite WolfAction; 
 
+   public Animator ActionAnimator; 
+
    public VirtualNetworkController Controller; 
 
    public eClientState CurrentState = eClientState.DISCOVER;
@@ -40,6 +42,13 @@ public class ClientSceneController : MonoBehaviour
    {
       if ((CurrentState != eClientState.DISCOVER) && (!NetworkManager.singleton.isNetworkActive)) {
          SetState( eClientState.DISCOVER ); 
+      }
+
+      if (Controller != null) {
+         ActionAnimator.SetBool("IsWolf", Controller.IsWolf); 
+         ActionAnimator.SetBool("IsDead", Controller.IsDead);
+         ActionAnimator.SetBool("IsReady", Controller.ClientIsReady);
+         ActionAnimator.SetBool("IsInGame", Controller.IsInGame());
       }
 
       DebugText.gameObject.SetActive(Controller != null); 

@@ -19,7 +19,7 @@ public class ClientConnectionStatus : MonoBehaviour
    {
       if (NetworkManager.singleton.isNetworkActive) {
          AddressText.gameObject.SetActive(true);
-         AddressText.text = HopperNetwork.Instance.GetLocalAddress() + ":" + HopperNetwork.Instance.networkPort; 
+         AddressText.text = HopperNetwork.Instance.networkAddress + ":" + HopperNetwork.Instance.networkPort; 
       } else {
          AddressText.gameObject.SetActive(false);
       }

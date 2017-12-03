@@ -227,7 +227,7 @@ MonoBehaviour:
   SleepyBunny: {fileID: 21300000, guid: 34d8431e3731a6c4faaa0cf6899cf42b, type: 3}
   BunnyAction: {fileID: 21300000, guid: 28f708fd26e136d47a021cc3c59cff93, type: 3}
   WolfAction: {fileID: 21300000, guid: 322ed4363ccd8204584f3239472d893b, type: 3}
-  IsReady: 0
+  ActionAnimator: {fileID: 1817074548}
   Controller: {fileID: 0}
   CurrentState: 0
 --- !u!1 &515726804
@@ -611,6 +611,7 @@ MonoBehaviour:
   MaxRadius: 200
   InputWidth: 600
   ActiveFingerID: -1
+  ActionAnimator: {fileID: 1817074548}
 --- !u!1 &1072318060
 GameObject:
   m_ObjectHideFlags: 0
@@ -755,6 +756,48 @@ Prefab:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2ae043a4ea434ed42b2a0a4829934df4, type: 2}
+  m_IsPrefabParent: 0
+--- !u!1001 &1438494462
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4320986381040138, guid: 80af9b419d362a44ea6726cd940e91a5, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 38.586243
+      objectReference: {fileID: 0}
+    - target: {fileID: 4320986381040138, guid: 80af9b419d362a44ea6726cd940e91a5, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: -2.9452257
+      objectReference: {fileID: 0}
+    - target: {fileID: 4320986381040138, guid: 80af9b419d362a44ea6726cd940e91a5, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 4320986381040138, guid: 80af9b419d362a44ea6726cd940e91a5, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4320986381040138, guid: 80af9b419d362a44ea6726cd940e91a5, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4320986381040138, guid: 80af9b419d362a44ea6726cd940e91a5, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4320986381040138, guid: 80af9b419d362a44ea6726cd940e91a5, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4320986381040138, guid: 80af9b419d362a44ea6726cd940e91a5, type: 2}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 80af9b419d362a44ea6726cd940e91a5, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &1603668427
 GameObject:
@@ -986,6 +1029,7 @@ GameObject:
   - component: {fileID: 1817074547}
   - component: {fileID: 1817074550}
   - component: {fileID: 1817074549}
+  - component: {fileID: 1817074548}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -1008,9 +1052,26 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 42.099968, y: 15.530258}
-  m_SizeDelta: {x: 472.2, y: 337.4}
-  m_Pivot: {x: 0.000000044703484, y: 0.606788}
+  m_AnchoredPosition: {x: 250.94977, y: -225.48961}
+  m_SizeDelta: {x: 417.7, y: 381.5}
+  m_Pivot: {x: 0.5, y: 0.00000008940697}
+--- !u!95 &1817074548
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1817074546}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3722e32053884144bab3f4cc8dc0df54, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!114 &1817074549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1024,13 +1085,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300006, guid: 14c7f96180c855543bf76c4fb6e3baba, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 14c7f96180c855543bf76c4fb6e3baba, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
