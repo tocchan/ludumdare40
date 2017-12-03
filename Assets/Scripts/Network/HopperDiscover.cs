@@ -46,9 +46,11 @@ public class HopperDiscover : NetworkDiscovery
    //------------------------------------------------------
    public void Stop()
    {
-      FoundAddress = false; 
-      StopBroadcast(); 
-      Debug.Log( "Stopping Broadcast" ); 
+      if (IsRunning()) {
+         FoundAddress = false; 
+         StopBroadcast(); 
+         Debug.Log( "Stopping Broadcast" );
+      }
    }
 
    //------------------------------------------------------

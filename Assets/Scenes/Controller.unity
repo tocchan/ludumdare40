@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311918, g: 0.3807398, b: 0.35872716, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -223,8 +223,8 @@ MonoBehaviour:
   ActionImage: {fileID: 1817074549}
   ReadyBunny: {fileID: 21300000, guid: 14c7f96180c855543bf76c4fb6e3baba, type: 3}
   SleepyBunny: {fileID: 21300000, guid: 34d8431e3731a6c4faaa0cf6899cf42b, type: 3}
-  BunnyAction: {fileID: 21300000, guid: 172a828b4acf3e54c886bedcdff826a9, type: 3}
-  WolfAction: {fileID: 21300000, guid: 74e58a50d4e1d7643bc0c6da0741051f, type: 3}
+  BunnyAction: {fileID: 21300000, guid: 28f708fd26e136d47a021cc3c59cff93, type: 3}
+  WolfAction: {fileID: 21300000, guid: 322ed4363ccd8204584f3239472d893b, type: 3}
   IsReady: 0
   Controller: {fileID: 0}
   CurrentState: 0
@@ -818,9 +818,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 200.5, y: -20.5}
-  m_SizeDelta: {x: 316.9, y: 337.4}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 42.099968, y: 15.530258}
+  m_SizeDelta: {x: 472.2, y: 337.4}
+  m_Pivot: {x: 0.000000044703484, y: 0.606788}
 --- !u!114 &1817074549
 MonoBehaviour:
   m_ObjectHideFlags: 0

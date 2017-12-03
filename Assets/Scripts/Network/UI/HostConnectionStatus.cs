@@ -34,7 +34,9 @@ public class HostConnectionStatus : MonoBehaviour
    //-------------------------------------------------------------------
    void ReadyCountChanged( VirtualNetworkController ctrl )
    {
-      ConnectionReadyText.text = "Ready: " + HopperNetwork.GetReadyCount();
+      if (null != ConnectionReadyText) {
+         ConnectionReadyText.text = "Ready: " + HopperNetwork.GetReadyCount();
+      }
    }
 }
 
