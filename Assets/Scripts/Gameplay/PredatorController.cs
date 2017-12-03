@@ -141,14 +141,8 @@ public class PredatorController : MonoBehaviour
 			return;
 		}
 
-      if (m_netController == null) 
-      {
-         return;
-      }
-
-		if (m_netController.ActionCount > 0)
+		if (m_netController.ConsumeAllActions())
 		{
-			m_netController.ConsumeAllActions();
 			Attack();
 		}
 
@@ -260,7 +254,7 @@ public class PredatorController : MonoBehaviour
 		//Setting sprite animation
 		if(m_isAttacking)
 		{
-			m_animator.Play(GameManager.ANIM_WOLF_BITE, 0, 0.0f);
+			m_animator.Play(GameManager.ANIM_WOLF_BITE, 0, bitePercent);
 		}
 
 		else if (m_rigidbody.velocity.magnitude > 2.0f)
@@ -309,11 +303,15 @@ public class PredatorController : MonoBehaviour
 	//-------------------------------------------------------------------------------------------------
 	public bool IsPlayer()
 	{
-		if (m_debugControl)
-		{
-			return true;
-		}
-
 		return m_netController != null;
+	}
+
+
+	//-------------------------------------------------------------------------------------------------
+	public void TransformIntoPrey()
+	{
+		GameObject prey = Instantiate(GameManager.GetInstance().m_preyPrefab, transform.position, transform.rotation);
+		prey.GetComponent<PreyController>().m_netController = m_netController;
+		Destroy(gameObject);
 	}
 }
