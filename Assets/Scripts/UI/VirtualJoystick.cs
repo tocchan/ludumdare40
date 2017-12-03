@@ -22,6 +22,13 @@ public class VirtualJoystick : MonoBehaviour
    }
    
    //---------------------------------------------------------------------
+   void UpdateMovementKnib( Vector2 offset )
+   {
+      Vector3 fullOffset = MaxRadius * offset; 
+      Knib.transform.localPosition = fullOffset; 
+   }
+
+   //---------------------------------------------------------------------
    void UpdateKnib( Vector2 pos )
    {
       Vector2 localPos; 
@@ -42,7 +49,9 @@ public class VirtualJoystick : MonoBehaviour
 
       VirtualNetworkController controller = HopperNetwork.GetMyController(); 
       if (controller != null) {
-         controller.SetMovement( dir * (length / MaxRadius) );
+         Vector2 movement = dir * (length / MaxRadius); 
+         UpdateMovementKnib( movement ); 
+         controller.SetMovement( movement );
       }
    }
 
@@ -61,13 +70,13 @@ public class VirtualJoystick : MonoBehaviour
    }
 
    //---------------------------------------------------------------------
-   void UpdateAction( Touch touch )
+   void DoAction()
    {
+      ActionAnimator.SetTrigger("DoAction");
+
       VirtualNetworkController controller = HopperNetwork.GetMyController(); 
       if (controller != null) {
-         ActionAnimator.SetTrigger("DoAction");
          controller.DoAction();
-
          if (controller.IsInGame()) {
             if (controller.IsWolf) {
                AudioManager.Play(eSoundType.FOX_BITE);
@@ -75,6 +84,15 @@ public class VirtualJoystick : MonoBehaviour
                AudioManager.Play(eSoundType.BUNNY_LAUGH);
             }
          }
+      }
+   }
+
+   //---------------------------------------------------------------------
+   void UpdateAction( Touch touch )
+   {
+      VirtualNetworkController controller = HopperNetwork.GetMyController(); 
+      if (controller != null) {
+         DoAction(); 
       }
    }
 
@@ -112,6 +130,29 @@ public class VirtualJoystick : MonoBehaviour
    // Update is called once per frame
    void Update()
    {
+      if ((Application.platform == RuntimePlatform.WindowsEditor) || (Application.platform == RuntimePlatform.WindowsEditor)) {
+         VirtualNetworkController controller = HopperNetwork.GetMyController(); 
+
+         if (controller != null) {
+            float x = Input.GetAxis("Horizontal"); 
+            float y = -Input.GetAxis("Vertical"); 
+            bool action = Input.GetButtonDown("Fire2"); 
+
+            Vector2 move = new Vector2(x, y);
+            if (move.sqrMagnitude > 1.0f) {
+               move.Normalize();
+            }
+
+
+            UpdateMovementKnib(move);
+            controller.SetMovement(move);
+
+            if (action) {
+               DoAction();
+            }
+         }
+      }
+
       if (!Input.touchSupported) {
          // fake touch
          if (Input.GetMouseButton(0) && (!HackActionDown || (ActiveFingerID >= 0))) {
