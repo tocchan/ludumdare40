@@ -1,0 +1,115 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1903845487130902}
+  m_IsPrefabParent: 1
+--- !u!1 &1903845487130902
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4320986381040138}
+  - component: {fileID: 114016885204685852}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4320986381040138
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1903845487130902}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 38.586243, y: -2.9452257, z: 90}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114016885204685852
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1903845487130902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44e43f3cc5d096e40adab0c76b66e149, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Groups:
+  - Type: 0
+    Clips:
+    - {fileID: 8300000, guid: c7a890d6234c93148b76e24bdef6d5fc, type: 3}
+    - {fileID: 8300000, guid: 67a4b03d21925694d97072126bc43537, type: 3}
+    - {fileID: 8300000, guid: 93b5afbeb9f78c948909952779b92d24, type: 3}
+    - {fileID: 8300000, guid: 43ae636465f32df4682272c02b83f6ba, type: 3}
+    - {fileID: 8300000, guid: a0b59ae5390a4674cbad279a28ac7d47, type: 3}
+  - Type: 1
+    Clips:
+    - {fileID: 8300000, guid: 7b33df698414efb42bca3f48d0ddd1e4, type: 3}
+    - {fileID: 8300000, guid: 08a93fecfdd502642ae3a24d51c7e7b4, type: 3}
+  - Type: 3
+    Clips:
+    - {fileID: 8300000, guid: e838b99ce8b9236498299646cb9e234c, type: 3}
+    - {fileID: 8300000, guid: f4066144a93478245822af8805c5c1e2, type: 3}
+    - {fileID: 8300000, guid: 2d4be5d797bbb404e8c06689b49643ba, type: 3}
+  - Type: 2
+    Clips:
+    - {fileID: 8300000, guid: dc22274e3041d084e84ca817910e2e57, type: 3}
+  - Type: 4
+    Clips:
+    - {fileID: 8300000, guid: 108bd40f5bbad614581f5f3641942a83, type: 3}
+  - Type: 6
+    Clips:
+    - {fileID: 8300000, guid: 7b33df698414efb42bca3f48d0ddd1e4, type: 3}
+    - {fileID: 8300000, guid: 08a93fecfdd502642ae3a24d51c7e7b4, type: 3}
+  - Type: 5
+    Clips:
+    - {fileID: 8300000, guid: 08ebce1b798a52349a365db627d6dfdc, type: 3}
+    - {fileID: 8300000, guid: a1a237223b2fa37459beea712957eadc, type: 3}
+    - {fileID: 8300000, guid: 49eaae05b7ae20644871f58904a12ad1, type: 3}
+  - Type: 7
+    Clips:
+    - {fileID: 8300000, guid: 389e15a73b9638d48b914fe1ff2b81eb, type: 3}
+    - {fileID: 8300000, guid: 3df76d7236f2fde4092bd26f1f13363f, type: 3}
+    - {fileID: 8300000, guid: 9cb5fd2660337a441b2907d7550c78d0, type: 3}
+  - Type: 8
+    Clips:
+    - {fileID: 8300000, guid: 754fc3568a080ee4e9fa5b39d54f449b, type: 3}
+  - Type: 9
+    Clips:
+    - {fileID: 8300000, guid: b51428f4de1870149acadad11b00bee8, type: 3}
+  - Type: 10
+    Clips:
+    - {fileID: 8300000, guid: db9dc77f3fa292b49992e84b63a74c70, type: 3}
+    - {fileID: 8300000, guid: 4f58aeb9846690a4e97b872f35a05c10, type: 3}
+    - {fileID: 8300000, guid: 0b83e14be8816cf42b1ff75d58171b3c, type: 3}
+  - Type: 11
+    Clips:
+    - {fileID: 8300000, guid: ee6cf933acb46404891233ef8ed80523, type: 3}
+    - {fileID: 8300000, guid: eac70ff98e3da984fbd606d2990fd557, type: 3}
+  - Type: 12
+    Clips: []
+  - Type: 13
+    Clips:
+    - {fileID: 8300000, guid: a3e5be7f3dcb49c4a8a76067e08609cf, type: 3}
+    - {fileID: 8300000, guid: e49fec3d2aae6ae4c9bcefae6beda87d, type: 3}
+  - Type: 14
+    Clips:
+    - {fileID: 8300000, guid: fea8b866e7435c543a83d645169c0420, type: 3}
+    - {fileID: 8300000, guid: f18a2d45cc8d3364f9efce5ef758c78c, type: 3}
