@@ -12,6 +12,8 @@ public class VirtualJoystick : MonoBehaviour
 
    public int ActiveFingerID = -1; 
 
+   public Animator ActionAnimator; 
+
    //---------------------------------------------------------------------
    // Use this for initialization
    void Start()
@@ -63,7 +65,16 @@ public class VirtualJoystick : MonoBehaviour
    {
       VirtualNetworkController controller = HopperNetwork.GetMyController(); 
       if (controller != null) {
+         ActionAnimator.SetTrigger("DoAction");
          controller.DoAction();
+
+         if (controller.IsInGame()) {
+            if (controller.IsWolf) {
+               AudioManager.Play(eSoundType.FOX_BITE);
+            } else {
+               AudioManager.Play(eSoundType.BUNNY_LAUGH);
+            }
+         }
       }
    }
 
