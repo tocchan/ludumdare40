@@ -306,7 +306,7 @@ MonoBehaviour:
   m_foodSizeBunny: 1
   m_foodDigestSpeed: 0.25
   m_attackDuration: 0.25
-  m_debugControl: 1
+  m_debugControl: 0
   m_delayMovement: 0
   m_netController: {fileID: 0}
   m_attackAreaReference: {fileID: 1393632430257176}
