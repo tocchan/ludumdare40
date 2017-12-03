@@ -35,5 +35,14 @@ public class ReadyCheck : MonoBehaviour
 			}
 		}
 		m_renderer.enabled = isVisible;
+
+		//Dont flip check mark
+		Vector3 checkScale = transform.lossyScale;
+		if(checkScale.x < 0)
+		{
+			Vector3 newScale = transform.localScale;
+			newScale.x = transform.localScale.x * -1.0f;
+			transform.localScale = newScale;	
+		}
 	}
 }

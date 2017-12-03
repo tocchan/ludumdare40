@@ -35,7 +35,7 @@ public class TreeShake : MonoBehaviour
 		m_emitCounter += m_emitRate * Time.deltaTime;
 		if(m_emitCounter >= 1.0f)
 		{
-			m_leafParticleSystem.Emit(1);
+			//m_leafParticleSystem.Emit(1);
 			m_emitCounter -= 1.0f;
 		}
 	}

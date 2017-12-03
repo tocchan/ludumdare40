@@ -912,6 +912,26 @@ Prefab:
       value: 
       objectReference: {fileID: 21300000, guid: 1fd5712e81c98d4428605ee39d093863,
         type: 3}
+    - target: {fileID: 198987951791172040, guid: 124638698306d274a86a22e736ccd0e7,
+        type: 2}
+      propertyPath: ShapeModule.m_Scale.z
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 198987951791172040, guid: 124638698306d274a86a22e736ccd0e7,
+        type: 2}
+      propertyPath: randomSeed
+      value: -1384602947
+      objectReference: {fileID: 0}
+    - target: {fileID: 198987951791172040, guid: 124638698306d274a86a22e736ccd0e7,
+        type: 2}
+      propertyPath: InitialModule.startSize.scalar
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 198987951791172040, guid: 124638698306d274a86a22e736ccd0e7,
+        type: 2}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 124638698306d274a86a22e736ccd0e7, type: 2}
   m_IsPrefabParent: 0
@@ -1292,6 +1312,35 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4864406490051808, guid: 124638698306d274a86a22e736ccd0e7, type: 2}
       propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 198987951791172040, guid: 124638698306d274a86a22e736ccd0e7,
+        type: 2}
+      propertyPath: randomSeed
+      value: -1430088445
+      objectReference: {fileID: 0}
+    - target: {fileID: 198987951791172040, guid: 124638698306d274a86a22e736ccd0e7,
+        type: 2}
+      propertyPath: ShapeModule.m_Scale.x
+      value: 3.17582
+      objectReference: {fileID: 0}
+    - target: {fileID: 4042638073264932, guid: 124638698306d274a86a22e736ccd0e7, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 1.98
+      objectReference: {fileID: 0}
+    - target: {fileID: 198987951791172040, guid: 124638698306d274a86a22e736ccd0e7,
+        type: 2}
+      propertyPath: ShapeModule.m_Scale.z
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 198987951791172040, guid: 124638698306d274a86a22e736ccd0e7,
+        type: 2}
+      propertyPath: InitialModule.startSize.scalar
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 198987951791172040, guid: 124638698306d274a86a22e736ccd0e7,
+        type: 2}
+      propertyPath: EmissionModule.rateOverTime.scalar
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

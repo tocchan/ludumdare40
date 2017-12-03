@@ -326,6 +326,11 @@ public class PreyController : MonoBehaviour
 				Instantiate(GameManager.GetInstance().m_preyPrefab, babyLocation, Quaternion.identity);
 			}
 
+			//Spawn Explosion
+			Vector3 explosionLocation = babyLocation;
+			explosionLocation.y -= 0.5f; //Appear slightly below mate location
+			Instantiate(GameManager.GetInstance().m_explosionPrefab, explosionLocation, Quaternion.identity);
+
 			StopHop();
 			otherPrey.StopHop();
 		}
@@ -363,6 +368,10 @@ public class PreyController : MonoBehaviour
 	//-------------------------------------------------------------------------------------------------
 	public void TransformIntoPredator()
 	{
+		Vector3 explosionLocation = transform.position;
+		explosionLocation.y -= 0.5f; //Appear slightly below mate location
+		Instantiate(GameManager.GetInstance().m_explosionPrefab, explosionLocation, Quaternion.identity);
+
 		m_netController.SetWolf();
 		GameObject predator = Instantiate(GameManager.GetInstance().m_predatorPrefab, transform.position, transform.rotation);
 		predator.GetComponent<PredatorController>().m_netController = m_netController;

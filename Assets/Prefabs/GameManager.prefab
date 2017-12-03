@@ -61,6 +61,8 @@ MonoBehaviour:
     type: 2}
   m_bonePilePrefab: {fileID: 1091650140895490, guid: b18773aa362f62742aec668f6e5dd704,
     type: 2}
+  m_explosionPrefab: {fileID: 1259367400216268, guid: 47b9f0ef5175e2541b34e488362bce81,
+    type: 2}
   m_gameTimeText: {fileID: 0}
   m_gameOverText: {fileID: 0}
   m_backgroundMusic: {fileID: 0}

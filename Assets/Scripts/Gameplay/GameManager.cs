@@ -44,6 +44,7 @@ public class GameManager : MonoSingleton<GameManager>
 	public GameObject m_preyPrefab;
 	public GameObject m_predatorPrefab;
 	public GameObject m_bonePilePrefab;
+	public GameObject m_explosionPrefab;
 
 
 	//-------------------------------------------------------------------------------------------------
@@ -246,7 +247,7 @@ public class GameManager : MonoSingleton<GameManager>
 		{
 			m_gameTimer = 0.0f;
 			AudioManager.Play(eSoundType.FOX_HOWL);
-			SpawnAdditionalPrey();
+			//SpawnAdditionalPrey();
 		}
 
 		else if(state == eGameState.GAME_OVER)

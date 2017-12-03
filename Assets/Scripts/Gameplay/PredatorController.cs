@@ -186,7 +186,7 @@ public class PredatorController : MonoBehaviour
 		}
 
 		//Get move speed from stomach
-      float moveLerp = m_moveSpeedCurve.Evaluate( Mathf.Clamp01(1.0f - GetStomachPercent()) ); 
+	  float moveLerp = m_moveSpeedCurve.Evaluate( Mathf.Clamp01(1.0f - GetStomachPercent()) ); 
 		float moveSpeed = Mathf.Lerp(m_moveSpeedMin, m_moveSpeedMax, moveLerp);
 
 		//Move predator
@@ -348,6 +348,11 @@ public class PredatorController : MonoBehaviour
 	public void Attack()
 	{
 		if(m_isAttacking)
+		{
+			return;
+		}
+
+		if(GameManager.GetInstance().m_currentState == eGameState.GAME_OVER)
 		{
 			return;
 		}
