@@ -20,7 +20,7 @@ public class PredatorController : MonoBehaviour
 
 	//-------------------------------------------------------------------------------------------------
 	[Header("Debug")]
-	public bool debugControl = false;
+	public bool m_debugControl = false;
 
 
 	//-------------------------------------------------------------------------------------------------
@@ -40,9 +40,11 @@ public class PredatorController : MonoBehaviour
 	//-------------------------------------------------------------------------------------------------
 	[Header("References")]
 	public GameObject m_attackAreaReference;
+	public GameObject m_visualReference;
 	Rigidbody2D m_rigidbody;
 	CircleCollider2D m_attackAreaCollider;
 	ContactFilter2D m_attackAreaFilter;
+	Animator m_animator;
 
 
 	//-------------------------------------------------------------------------------------------------
@@ -51,6 +53,7 @@ public class PredatorController : MonoBehaviour
 	private void Start()
 	{
 		m_rigidbody = GetComponent<Rigidbody2D>();
+		m_animator = m_visualReference.GetComponent<Animator>();
 		m_attackAreaCollider = m_attackAreaReference.GetComponent<CircleCollider2D>();
 		m_attackAreaFilter = new ContactFilter2D();
 		m_attackAreaFilter.NoFilter();
@@ -61,9 +64,11 @@ public class PredatorController : MonoBehaviour
 	private void Update()
 	{
 		UpdateFoodConsumption();
-		UpdateDebugInput();
+		UpdateInputDebug();
+		UpdateInputNet();
 		UpdateMove();
 		UpdateAttack();
+		UpdateVisual();
 	}
 
 
@@ -76,9 +81,9 @@ public class PredatorController : MonoBehaviour
 
 
 	//-------------------------------------------------------------------------------------------------
-	private void UpdateDebugInput()
+	private void UpdateInputDebug()
 	{
-		if (!debugControl)
+		if (!m_debugControl)
 		{
 			return;
 		}
@@ -128,6 +133,27 @@ public class PredatorController : MonoBehaviour
 
 
 	//-------------------------------------------------------------------------------------------------
+	private void UpdateInputNet()
+	{
+		if (!IsPlayer())
+		{
+			return;
+		}
+
+		if (m_netController.ActionCount > 0)
+		{
+			m_netController.ConsumeAllActions();
+			Attack();
+		}
+
+		if (m_netController.Movement != Vector2.zero)
+		{
+			Move(m_netController.Movement);
+		}
+	}
+
+
+	//-------------------------------------------------------------------------------------------------
 	private void UpdateMove()
 	{
 		if(!m_moveNeedsUpdate)
@@ -171,7 +197,13 @@ public class PredatorController : MonoBehaviour
 				}
 
 				GameObject attackedObject = colliders[colliderIndex].gameObject;
-				PreyController attackedPrey = attackedObject.GetComponent<PreyController>();
+				Transform attackedObjectParent = attackedObject.transform.parent;
+				if(attackedObjectParent == null)
+				{
+					continue;
+				}
+
+				PreyController attackedPrey = attackedObjectParent.GetComponent<PreyController>();
 				if(attackedPrey != null)
 				{
 					attackedPrey.Eaten();
@@ -188,8 +220,46 @@ public class PredatorController : MonoBehaviour
 		else
 		{
 			//Update attack area location
-			float attackAreaOffset = 0.25f;
+			float attackAreaOffset = 0.5f;
 			m_attackAreaReference.transform.localPosition = m_movePrevious * attackAreaOffset;
+		}
+	}
+
+
+	//-------------------------------------------------------------------------------------------------
+	private void UpdateVisual()
+	{
+		//Hop Height
+		float bitePercent = m_attackTimer / m_attackDuration;
+
+		//Facing direction
+		if (m_movePrevious.x > 0.0f)
+		{
+			Vector3 scale = m_visualReference.transform.localScale;
+			scale.x = -1.0f * Mathf.Abs(scale.x);
+			m_visualReference.transform.localScale = scale;
+		}
+		else
+		{
+			Vector3 scale = m_visualReference.transform.localScale;
+			scale.x = Mathf.Abs(scale.x);
+			m_visualReference.transform.localScale = scale;
+		}
+
+		//Setting sprite animation
+		if(m_isAttacking)
+		{
+			m_animator.Play(GameManager.ANIM_WOLF_BITE, 0, 0.0f);
+		}
+
+		else if (m_rigidbody.velocity.magnitude > 2.0f)
+		{
+			m_animator.Play(GameManager.ANIM_WOLF_SNIFF, 0, 0.0f);
+		}
+
+		else
+		{
+			m_animator.Play(GameManager.ANIM_WOLF_IDLE, 0, 0.0f);
 		}
 	}
 
@@ -211,8 +281,25 @@ public class PredatorController : MonoBehaviour
 	//-------------------------------------------------------------------------------------------------
 	public void Attack()
 	{
+		if(m_isAttacking)
+		{
+			return;
+		}
+
 		Move(m_movePrevious);
 		m_isAttacking = true;
 		m_attackTimer = 0.0f;
+	}
+
+
+	//-------------------------------------------------------------------------------------------------
+	public bool IsPlayer()
+	{
+		if (m_debugControl)
+		{
+			return true;
+		}
+
+		return m_netController != null;
 	}
 }
