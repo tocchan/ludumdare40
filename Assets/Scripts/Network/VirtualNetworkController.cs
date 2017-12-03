@@ -115,6 +115,7 @@ public class VirtualNetworkController : NetworkBehaviour
       IsPresentInGame = inGame;
       if (!inGame) {
          ConsumeAllActions(); 
+         SetReady(false); 
          IsWolf = false; 
          IsDead = false; 
       }
@@ -150,15 +151,16 @@ public class VirtualNetworkController : NetworkBehaviour
    [Command(channel=0)]
    public void CmdSetReady( bool ready )
    {
-      ClientIsReady = ready; 
-      Debug.Log("Got'em");
-      if (ready) {
-         if (OnPlayerReady != null) {
-            OnPlayerReady(this);
-         }
-      } else {
-         if (OnPlayerUnready != null) {
-            OnPlayerUnready(this);
+      if (ClientIsReady != ready) {
+         ClientIsReady = ready; 
+         if (ready) {
+            if (OnPlayerReady != null) {
+               OnPlayerReady(this);
+            }
+         } else {
+            if (OnPlayerUnready != null) {
+               OnPlayerUnready(this);
+            }
          }
       }
    }
