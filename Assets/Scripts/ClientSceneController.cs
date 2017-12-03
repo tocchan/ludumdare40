@@ -121,6 +121,11 @@ public class ClientSceneController : MonoBehaviour
    public void UpdateInGame()
    {
       VirtualNetworkController controller = HopperNetwork.GetMyController(); 
+      if (!controller.IsInGame()) {
+         SetState( eClientState.LOBBY ); 
+         return; 
+      }
+
       if (controller.IsWolf) {
          ActionImage.sprite = WolfAction;
       } else {
