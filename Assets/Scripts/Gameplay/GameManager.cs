@@ -204,6 +204,7 @@ public class GameManager : MonoSingleton<GameManager>
 		{
 			bool isReady = HopperNetwork.IsEveryoneReady();
 			bool isEnoughPlayers = HopperNetwork.GetConnectionCount() >= 3;
+
 			if(isReady && isEnoughPlayers)
 			{
 				HopperNetwork.StartGame();
