@@ -356,11 +356,6 @@ public class PreyController : MonoBehaviour
 	//-------------------------------------------------------------------------------------------------
 	public bool IsPlayer()
 	{
-		if(m_debugControl)
-		{
-			return true;
-		}
-
 		return m_netController != null;
 	}
 
