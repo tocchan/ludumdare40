@@ -373,12 +373,6 @@ public class GameManager : MonoSingleton<GameManager>
 		float aliveIntensity = 0.0f; 
 	  float timeIntensity = 0.0f; 
 		if (m_currentState == eGameState.IN_GAME) {
-			// up pitch based on bunny count alive; 
-			int aliveCount = GetHumanPreyAliveCount(); 
-			aliveCount = Mathf.Clamp( aliveCount, 1, 4 ); 
-			aliveIntensity = 1.0f - ((float)aliveCount / 4.0f);  // so, .75f to 0.0f
-			aliveIntensity *= (1.0f - m_targetPitch); // this is 1 when we're fattest, so this speed up only applies if the fox is "fast"
-
          float remaining = m_gameDuration - m_gameTimer; 
          if (remaining < 10.0f) {
             timeIntensity = .5f;

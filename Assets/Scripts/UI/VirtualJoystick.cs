@@ -136,7 +136,7 @@ public class VirtualJoystick : MonoBehaviour
          if (controller != null) {
             float x = Input.GetAxis("Horizontal"); 
             float y = -Input.GetAxis("Vertical"); 
-            bool action = Input.GetButtonDown("Fire2"); 
+            bool action = Input.GetButtonDown("Fire1"); 
 
             Vector2 move = new Vector2(x, y);
             if (move.sqrMagnitude > 1.0f) {
