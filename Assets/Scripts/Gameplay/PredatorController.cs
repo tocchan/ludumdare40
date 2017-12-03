@@ -296,8 +296,8 @@ public class PredatorController : MonoBehaviour
 	//-------------------------------------------------------------------------------------------------
 	private void UpdateAudio()
 	{
-		float stomachPercent = 1.0f - GetStomachPercent();
-		GameManager.GetInstance().SetBGPitch(stomachPercent);
+		float stomachPercent = GetStomachPercent();
+		GameManager.GetInstance().SetTargetBGPitch(stomachPercent);
 	}
 
 

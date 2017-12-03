@@ -47,7 +47,13 @@ public class GameManager : MonoSingleton<GameManager>
 	[Header("References")]
 	public Text m_gameTimeText;
 	public Text m_gameOverText;
+
 	public AudioSource m_backgroundMusic;
+   public AnimationCurve m_pitchCurve = AnimationCurve.Linear(0, 0, 1, 1); 
+
+   [HideInInspector]
+   public float m_targetPitch = .5f; 
+   public float m_targetVolume = 1.0f; 
 
 
 	//-------------------------------------------------------------------------------------------------
@@ -60,12 +66,23 @@ public class GameManager : MonoSingleton<GameManager>
 
 
 	//-------------------------------------------------------------------------------------------------
-	// Static Functions
-	//-------------------------------------------------------------------------------------------------
 	public void SetBGPitch(float pitch)
 	{
 		m_backgroundMusic.pitch = pitch;
 	}
+
+	//-------------------------------------------------------------------------------------------------
+   public void SetTargetBGPitch( float lerpValue )
+   {
+      lerpValue = Mathf.Clamp01( lerpValue ); 
+      m_targetPitch = lerpValue; 
+   }
+
+	//-------------------------------------------------------------------------------------------------
+   public void SetTargetVolume( float volume )
+   {
+      m_targetVolume = Mathf.Clamp01(volume); 
+   }
 
 
 	//-------------------------------------------------------------------------------------------------
@@ -87,7 +104,6 @@ public class GameManager : MonoSingleton<GameManager>
 		return preyList.ToArray();
 	}
 
-
 	//-------------------------------------------------------------------------------------------------
 	public int GetHumanPreyAliveCount()
 	{
@@ -103,6 +119,11 @@ public class GameManager : MonoSingleton<GameManager>
 		return count;
 	}
 
+	//-------------------------------------------------------------------------------------------------
+   public int GetPreyAliveCount()
+   {
+		return GameObject.FindGameObjectsWithTag(TAG_PREY).Length;
+   }
 
 	//-------------------------------------------------------------------------------------------------
 	public static PreyController GetClosestPrey(PreyController fromPrey)
@@ -179,6 +200,8 @@ public class GameManager : MonoSingleton<GameManager>
 		HopperNetwork.Instance.OnPlayerJoin += AddPlayer;
 		HopperNetwork.Instance.OnPlayerLeave += RemovePlayer;
 		EnterState(m_currentState);
+
+      SetTargetBGPitch(.5f); 
 	}
 
 
@@ -188,6 +211,7 @@ public class GameManager : MonoSingleton<GameManager>
 		UpdateState(m_currentState);
 		UpdateTimeLabel();
 		UpdateGameOverLabel();
+      UpdateMusic(); 
 	}
 
 
@@ -206,7 +230,7 @@ public class GameManager : MonoSingleton<GameManager>
 	{
 		if(state == eGameState.WAIT_FOR_READY)
 		{
-			SetBGPitch(1.0f);
+			SetTargetBGPitch(.5f);
 		}
 
 		else if(state == eGameState.IN_GAME)
@@ -325,6 +349,32 @@ public class GameManager : MonoSingleton<GameManager>
 		m_gameOverText.color = new Color(RandomMathColorFloat(3.0f), RandomMathColorFloat(5.0f), RandomMathColorFloat(7.0f));
 		m_gameOverText.text = gameOverText;
 	}
+
+	//-------------------------------------------------------------------------------------------------
+   private void UpdateMusic()
+   {
+      float aliveIntensity = 0.0f; 
+      if (m_currentState == eGameState.IN_GAME) {
+         // up pitch based on bunny count alive; 
+         int aliveCount = GetHumanPreyAliveCount(); 
+         aliveCount = Mathf.Clamp( aliveCount, 1, 4 ); 
+         aliveIntensity = 1.0f - ((float)aliveCount / 4.0f);  // so, .75f to 0.0f
+         aliveIntensity *= (1.0f - m_targetPitch); // this is 1 when we're fattest, so this speed up only applies if the fox is "fast"
+      }
+
+      float pitch = m_backgroundMusic.pitch;
+      float volume = m_backgroundMusic.volume; 
+
+      float dt = Time.deltaTime;
+      float lerpValue = Mathf.Clamp( Mathf.Pow( dt * 8.0f, 1.5f ), 0, .2f ); 
+
+      float targetPitch = m_pitchCurve.Evaluate(m_targetPitch) + aliveIntensity; 
+      pitch = Mathf.Lerp( pitch, targetPitch, lerpValue );
+      volume = Mathf.Lerp( volume, m_targetVolume, lerpValue ); 
+
+      m_backgroundMusic.pitch = pitch;
+      m_backgroundMusic.volume = volume; 
+   }
 
 
 	//-------------------------------------------------------------------------------------------------
