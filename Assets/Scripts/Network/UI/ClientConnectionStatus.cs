@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
 public class ClientConnectionStatus : MonoBehaviour
 {
    public Text StatusText; 
+   public Text AddressText; 
 
    // Use this for initialization
    void Start()
@@ -15,10 +17,17 @@ public class ClientConnectionStatus : MonoBehaviour
    // Update is called once per frame
    void Update()
    {
+      if (NetworkManager.singleton.isNetworkActive) {
+         AddressText.gameObject.SetActive(true);
+         AddressText.text = HopperNetwork.Instance.GetLocalAddress() + ":" + HopperNetwork.Instance.networkPort; 
+      } else {
+         AddressText.gameObject.SetActive(false);
+      }
+
       HopperNetwork.eState state = HopperNetwork.GetState();
       switch (state) {
          case HopperNetwork.eState.DISCONNECTED: 
-            StatusText.text = "Disconnected";
+            StatusText.text = "DISCONNECTED";
             break;
 
          case HopperNetwork.eState.CLIENT_LOOKING:

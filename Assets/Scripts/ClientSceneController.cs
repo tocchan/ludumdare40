@@ -18,6 +18,7 @@ public class ClientSceneController : MonoBehaviour
    public GameObject Title;
    public GameObject HopperUI; 
    public Image ActionImage; 
+   public Text DebugText; 
 
    public Sprite ReadyBunny;
    public Sprite SleepyBunny;
@@ -44,14 +45,17 @@ public class ClientSceneController : MonoBehaviour
 
       switch (CurrentState) {
          case eClientState.DISCOVER:
+            DebugText.gameObject.SetActive(false); 
             UpdateDiscovery(); 
             break;
 
          case eClientState.LOBBY:
+            UpdateDebugText(); 
             UpdateLobby();
             break;
 
          case eClientState.IN_GAME:
+            UpdateDebugText(); 
             UpdateInGame();
             break;
 
@@ -124,6 +128,26 @@ public class ClientSceneController : MonoBehaviour
       } else {
          ActionImage.sprite = BunnyAction; 
       }
+   }
+
+   //-------------------------------------------------------------------
+   public void UpdateDebugText()
+   {
+      if (DebugText == null) {
+         return;
+      }
+
+      VirtualNetworkController controller = HopperNetwork.GetMyController(); 
+      if (controller == null) {
+         DebugText.text = "No Controller"; 
+         return; 
+      }
+
+      string str = "";
+      str += "Ready: " + (controller.ClientIsReady ? "Y" : "N") + "\n";
+      str += "Game: " + (controller.IsInGame() ? "Y" : "N") + "\n";
+      str += "Wolf: " + (controller.IsWolf ? "Y" : "N") + "\n";
+      DebugText.text = str; 
    }
 }
 
