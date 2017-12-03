@@ -113,6 +113,13 @@ public class VirtualNetworkController : NetworkBehaviour
    public void SetInGame( bool inGame )
    {
       IsPresentInGame = inGame;
+      if (!inGame) {
+         ConsumeAllActions(); 
+         ClientIsReady = false; 
+         IsWolf = false; 
+         IsDead = false; 
+      }
+
       RpcSetInGame(inGame);
    }
 
@@ -178,8 +185,10 @@ public class VirtualNetworkController : NetworkBehaviour
    [ClientRpc(channel = 0)]
    public void RpcSetInGame( bool inGame )
    {
-      IsPresentInGame = inGame; 
+      IsPresentInGame = inGame;
+      ConsumeAllActions(); // get rid of all actions;  
       if (!inGame) {
+         ClientIsReady = false; 
          IsWolf = false; 
          IsDead = false; 
       }

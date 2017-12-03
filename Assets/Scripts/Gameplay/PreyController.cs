@@ -364,7 +364,7 @@ public class PreyController : MonoBehaviour
 	//-------------------------------------------------------------------------------------------------
 	public void TransformIntoPredator()
 	{
-		m_netController.RpcSetWolf();
+		m_netController.SetWolf();
 		GameObject predator = Instantiate(GameManager.GetInstance().m_predatorPrefab, transform.position, transform.rotation);
 		predator.GetComponent<PredatorController>().m_netController = m_netController;
 		Destroy(gameObject);
