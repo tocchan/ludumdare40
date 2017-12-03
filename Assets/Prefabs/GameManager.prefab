@@ -80,5 +80,5 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 0
   m_targetPitch: 0
-  m_targetVolume: 1
+  m_targetVolume: 0.3
   m_currentState: 0

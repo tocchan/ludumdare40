@@ -228,6 +228,7 @@ public class PreyController : MonoBehaviour
 		}
 
 		//Dead bunnies are ghost
+      m_shadowReference.SetActive( !m_isDead ); 
 		if(m_isDead)
 		{
 			m_visualReference.GetComponent<SpriteRenderer>().color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
@@ -384,7 +385,11 @@ public class PreyController : MonoBehaviour
 			if (hitPrey.IsPlayer())
 			{
 				SpawnBabiesWith(hitPrey);
-			}
+			} 
+         else 
+         {
+            AudioManager.Play( eSoundType.BUNNY_BUMP ); 
+         }
 		}
 	}
 }
