@@ -6,24 +6,61 @@ using UnityEngine.Networking;
 [NetworkSettings( channel=1, sendInterval = 0.05f )]
 public class VirtualNetworkController : NetworkBehaviour
 {
+   public delegate void DOnPlayerReady( VirtualNetworkController conn );
+   public delegate void DOnPlayerUnready( VirtualNetworkController conn ); 
+
    public Vector2 Movement; 
    
    public uint ActionCount; 
    private uint LastConsumedAction = 0;
 
    public bool ClientIsReady = false;
-   public bool IsPresentInGame = false; 
+   public bool IsPresentInGame = false;
+
+   public static DOnPlayerReady OnPlayerReady;
+   public static DOnPlayerUnready OnPlayerUnready; 
+
+   private void Start()
+   {
+      if (HopperNetwork.Instance.OnPlayerJoin != null) {
+         HopperNetwork.Instance.OnPlayerJoin(this); 
+      }
+   }
+
+   private void OnDestroy()
+   {
+      if (ClientIsReady) {
+         if (OnPlayerUnready != null) {
+            OnPlayerUnready(this);
+         }
+      }
+      if (HopperNetwork.Instance.OnPlayerLeave != null) {
+         HopperNetwork.Instance.OnPlayerLeave(this); 
+      }
+   }
 
 
    public void SetMovement( Vector2 v )
    {
       Movement = v; 
-      Debug.Log("Movement"); 
+      CmdMovement( v ); 
+   }
+
+   [Command (channel=1)]
+   void CmdMovement( Vector2 v )
+   {
+      Movement = v; 
    }
 
    public void DoAction()
    {
-      Debug.Log("Action"); 
+      ++ActionCount; 
+      CmdAction(); 
+   }
+
+   [Command (channel=0)]
+   void CmdAction()
+   {
       ++ActionCount; 
    }
 
@@ -60,11 +97,28 @@ public class VirtualNetworkController : NetworkBehaviour
    public void CmdSetReady( bool ready )
    {
       ClientIsReady = ready; 
+      Debug.Log("Got'em");
+      if (ready) {
+         if (OnPlayerReady != null) {
+            OnPlayerReady(this);
+         }
+      } else {
+         if (OnPlayerUnready != null) {
+            OnPlayerUnready(this);
+         }
+      }
+   }
+
+   [ClientRpc(channel = 0)]
+   public void RpcSetInGame( bool inGame )
+   {
+      IsPresentInGame = inGame; 
    }
    
    public bool IsInGame()
    {
       return IsPresentInGame; 
    }
+
 }
 
