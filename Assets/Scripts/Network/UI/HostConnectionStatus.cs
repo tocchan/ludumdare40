@@ -21,7 +21,7 @@ public class HostConnectionStatus : MonoBehaviour
       HopperNetwork.Instance.OnPlayerLeave += ConnectionsChanged;
 
       VirtualNetworkController.OnPlayerReady += ReadyCountChanged;
-      VirtualNetworkController.OnPlayerReady += ReadyCountChanged; 
+      VirtualNetworkController.OnPlayerUnready += ReadyCountChanged; 
 
    }
 
