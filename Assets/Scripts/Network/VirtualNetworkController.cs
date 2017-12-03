@@ -6,6 +6,9 @@ using UnityEngine.Networking;
 [NetworkSettings( channel=1, sendInterval = 0.05f )]
 public class VirtualNetworkController : NetworkBehaviour
 {
+   public delegate void DOnPlayerReady( VirtualNetworkController conn );
+   public delegate void DOnPlayerUnready( VirtualNetworkController conn ); 
+
    public Vector2 Movement; 
    
    public uint ActionCount; 
@@ -13,6 +16,9 @@ public class VirtualNetworkController : NetworkBehaviour
 
    public bool ClientIsReady = false;
    public bool IsPresentInGame = false;
+
+   public static DOnPlayerReady OnPlayerReady;
+   public static DOnPlayerUnready OnPlayerUnready; 
 
    private void Start()
    {
@@ -23,6 +29,11 @@ public class VirtualNetworkController : NetworkBehaviour
 
    private void OnDestroy()
    {
+      if (ClientIsReady) {
+         if (OnPlayerUnready != null) {
+            OnPlayerUnready(this);
+         }
+      }
       if (HopperNetwork.Instance.OnPlayerLeave != null) {
          HopperNetwork.Instance.OnPlayerLeave(this); 
       }
@@ -86,6 +97,16 @@ public class VirtualNetworkController : NetworkBehaviour
    public void CmdSetReady( bool ready )
    {
       ClientIsReady = ready; 
+      Debug.Log("Got'em");
+      if (ready) {
+         if (OnPlayerReady != null) {
+            OnPlayerReady(this);
+         }
+      } else {
+         if (OnPlayerUnready != null) {
+            OnPlayerUnready(this);
+         }
+      }
    }
 
    [ClientRpc(channel = 0)]

@@ -8,7 +8,9 @@ public class HostConnectionStatus : MonoBehaviour
 {
    public Text AddressText;
    public Text ConnectionCountText;
+   public Text ConnectionReadyText; 
 
+   //-------------------------------------------------------------------
    // Use this for initialization
    void Start()
    {
@@ -17,11 +19,22 @@ public class HostConnectionStatus : MonoBehaviour
 
       HopperNetwork.Instance.OnPlayerJoin += ConnectionsChanged;
       HopperNetwork.Instance.OnPlayerLeave += ConnectionsChanged;
+
+      VirtualNetworkController.OnPlayerReady += ReadyCountChanged;
+      VirtualNetworkController.OnPlayerReady += ReadyCountChanged; 
+
    }
 
+   //-------------------------------------------------------------------
    void ConnectionsChanged( VirtualNetworkController conn )
    {
       ConnectionCountText.text = "Players: " + HopperNetwork.GetConnectionCount();
+   }
+
+   //-------------------------------------------------------------------
+   void ReadyCountChanged( VirtualNetworkController ctrl )
+   {
+      ConnectionReadyText.text = "Ready: " + HopperNetwork.GetReadyCount();
    }
 }
 
