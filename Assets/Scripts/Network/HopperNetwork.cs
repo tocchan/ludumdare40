@@ -205,7 +205,7 @@ public class HopperNetwork : NetworkManager
    {
       var objects = GameObject.FindObjectsOfType<VirtualNetworkController>(); 
       for (int i = 0; i < objects.Length; ++i) {
-         objects[i].RpcSetInGame(true); 
+         objects[i].SetInGame(true); 
       }
    }
 
@@ -214,7 +214,7 @@ public class HopperNetwork : NetworkManager
    {
       var objects = GameObject.FindObjectsOfType<VirtualNetworkController>(); 
       for (int i = 0; i < objects.Length; ++i) {
-         objects[i].RpcSetInGame(false); 
+         objects[i].SetInGame(false); 
       }
    }
 
