@@ -363,22 +363,33 @@ public class GameManager : MonoSingleton<GameManager>
 	//-------------------------------------------------------------------------------------------------
 	private void UpdateMusic()
 	{
+      if (Time.time < 1.0f) {
+         m_backgroundMusic.volume = 0.0f;
+         return; 
+      }
+
 		float aliveIntensity = 0.0f; 
+      float timeIntensity = 0.0f; 
 		if (m_currentState == eGameState.IN_GAME) {
 			// up pitch based on bunny count alive; 
 			int aliveCount = GetHumanPreyAliveCount(); 
 			aliveCount = Mathf.Clamp( aliveCount, 1, 4 ); 
 			aliveIntensity = 1.0f - ((float)aliveCount / 4.0f);  // so, .75f to 0.0f
 			aliveIntensity *= (1.0f - m_targetPitch); // this is 1 when we're fattest, so this speed up only applies if the fox is "fast"
+
+         float remaining = m_gameDuration - m_gameTimer; 
+         if (remaining < 30.0f) {
+            timeIntensity = .5f;
+         }
 		}
 
 		float pitch = m_backgroundMusic.pitch;
 		float volume = m_backgroundMusic.volume; 
 
 		float dt = Time.deltaTime;
-		float lerpValue = Mathf.Clamp( Mathf.Pow( dt * 8.0f, 1.5f ), 0, .2f ); 
+		float lerpValue = Mathf.Clamp( Mathf.Pow( dt, 1.0f ), 0, .2f ); 
 
-		float targetPitch = m_pitchCurve.Evaluate(m_targetPitch) + aliveIntensity; 
+		float targetPitch = m_pitchCurve.Evaluate(m_targetPitch) + aliveIntensity + timeIntensity;
 		pitch = Mathf.Lerp( pitch, targetPitch, lerpValue );
 		volume = Mathf.Lerp( volume, m_targetVolume, lerpValue ); 
 
