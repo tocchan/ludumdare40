@@ -12,6 +12,7 @@ public class PredatorController : MonoBehaviour
 	[Header("Settings")]
 	public float m_moveSpeedMax = 5.0f;
 	public float m_moveSpeedMin = 1.0f;
+   public AnimationCurve m_moveSpeedCurve = AnimationCurve.Linear(0, 0, 1, 1); 
 	public float m_stomachSizeMax = 3.0f;
 	public float m_foodSizeBunny = 1.0f;
 	public float m_foodDigestSpeed = 1.0f;
@@ -185,7 +186,8 @@ public class PredatorController : MonoBehaviour
 		}
 
 		//Get move speed from stomach
-		float moveSpeed = Mathf.Lerp(m_moveSpeedMax, m_moveSpeedMin, GetStomachPercent());
+      float moveLerp = m_moveSpeedCurve.Evaluate( Mathf.Clamp01(1.0f - GetStomachPercent()) ); 
+		float moveSpeed = Mathf.Lerp(m_moveSpeedMin, m_moveSpeedMax, moveLerp);
 
 		//Move predator
 		m_moveCurrent.Normalize();

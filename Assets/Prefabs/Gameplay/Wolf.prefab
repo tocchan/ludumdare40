@@ -242,7 +242,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_moveSpeedMax: 5
-  m_moveSpeedMin: 1
+  m_moveSpeedMin: 0
+  m_moveSpeedCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0.0116731515
+      outSlope: 0.0116731515
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.14768717
+      value: -0.0022571385
+      inSlope: 0.024430912
+      outSlope: 2.6728673
+      tangentMode: 1
+    - serializedVersion: 2
+      time: 0.6003112
+      value: 0.8322998
+      inSlope: 0.7158375
+      outSlope: 0.7158375
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 1
+      inSlope: -0.002913861
+      outSlope: -0.002913861
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
   m_stomachSizeMax: 3
   m_foodSizeBunny: 1
   m_foodDigestSpeed: 0.25
