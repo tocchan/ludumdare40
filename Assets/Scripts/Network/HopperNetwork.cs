@@ -92,6 +92,10 @@ public class HopperNetwork : NetworkManager
    }
 
    //-------------------------------------------------------------------
+   // Statics
+   //-------------------------------------------------------------------
+
+   //-------------------------------------------------------------------
    public string GetLocalAddress()
    {
       return Network.player.ipAddress;
@@ -106,6 +110,12 @@ public class HopperNetwork : NetworkManager
       }
 
       return (NetworkServer.active); 
+   }
+
+   //-------------------------------------------------------------------
+   public static bool IsClient()
+   {
+      return !IsHost() && (GetMyConnection() != null);  
    }
 
    //-------------------------------------------------------------------
