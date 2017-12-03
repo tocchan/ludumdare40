@@ -33,10 +33,11 @@ public class PreyController : MonoBehaviour
 	private float m_hopTimer = 0.0f;
 	private Vector2 m_hopDirection = Vector2.zero;
 	private Vector2 m_visualStartLocation = Vector2.zero;
-
 	private float m_moveTimerAI = 0.0f;
 
-	private VirtualNetworkController m_netController = null;
+	[HideInInspector]
+	public VirtualNetworkController m_netController = null;
+
 
 	//-------------------------------------------------------------------------------------------------
 	// References
@@ -281,7 +282,7 @@ public class PreyController : MonoBehaviour
 
 
 	//-------------------------------------------------------------------------------------------------
-	private bool IsPlayer()
+	public bool IsPlayer()
 	{
 		if(m_debugControl)
 		{
