@@ -6,10 +6,25 @@ using UnityEditor;
 
 public static class BuildScripts 
 {
-   [MenuItem("ClayByte/Build Android Controller")]
-   static void MakeCustomBuild()
+   //---------------------------------------------------------------------------------------------------------------------
+   [MenuItem("ClayByte/Run Android Controller")]
+   static void MakeAndroidController()
    {
-      string path = "Builds/hopcontroller.apk";
+      BuildController( "/android/hopcontrol.apk", BuildTarget.Android ); 
+   }
+
+      //---------------------------------------------------------------------------------------------------------------------
+   [MenuItem("ClayByte/Run Windows Controller")]
+   static void MakeWindowsController()
+   {
+      BuildController( "/win32/hopcontrol.exe", BuildTarget.StandaloneWindows ); 
+   }
+
+
+   //---------------------------------------------------------------------------------------------------------------------
+   static void BuildController( string path, BuildTarget target )
+   {
+      string root = "Builds/";
 
       UnityEditor.SceneManagement.EditorSceneManager.SaveOpenScenes();
       string[] levels = { "Assets/Scenes/Controller.unity" }; 
@@ -17,6 +32,22 @@ public static class BuildScripts
          Debug.LogError( "No scene loaded. " ); 
          return; 
       }
-      BuildPipeline.BuildPlayer( levels, path + "/debug_build.apk", BuildTarget.Android, BuildOptions.AutoRunPlayer | BuildOptions.Development ); 
+      BuildPipeline.BuildPlayer( levels, root + path, target, BuildOptions.AutoRunPlayer | BuildOptions.Development ); 
+   }
+
+
+   //---------------------------------------------------------------------------------------------------------------------
+   [MenuItem("ClayByte/Run Game")]
+   static void MakeGameBuild()
+   {
+      string root = "Builds/";
+
+      UnityEditor.SceneManagement.EditorSceneManager.SaveOpenScenes();
+      string[] levels = { "Assets/Scenes/Game.unity" }; 
+      if (string.IsNullOrEmpty(levels[0])) {
+         Debug.LogError( "No scene loaded. " ); 
+         return; 
+      }
+      BuildPipeline.BuildPlayer( levels, root + "game/hophop.exe", BuildTarget.StandaloneWindows, BuildOptions.AutoRunPlayer | BuildOptions.Development ); 
    }
 }
