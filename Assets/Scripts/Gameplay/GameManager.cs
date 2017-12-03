@@ -505,7 +505,7 @@ public class GameManager : MonoSingleton<GameManager>
 		GameObject[] bonePiles = GameObject.FindGameObjectsWithTag(TAG_BONEPILE);
 		for (int boneIndex = 0; boneIndex < bonePiles.Length; ++boneIndex)
 		{
-
+			Destroy(bonePiles[boneIndex]);
 		}
 	}
 }
