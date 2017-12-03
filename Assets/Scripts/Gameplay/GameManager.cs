@@ -216,7 +216,6 @@ public class GameManager : MonoSingleton<GameManager>
 		{
 			m_gameTimer += Time.deltaTime;
 			int preyCount = GetHumanPreyAliveCount();
-			Debug.Log("Prey Count: " + preyCount);
 
 			//No players left wolf wins
 			if(preyCount == 0)

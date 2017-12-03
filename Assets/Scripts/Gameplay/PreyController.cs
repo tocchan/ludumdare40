@@ -140,7 +140,6 @@ public class PreyController : MonoBehaviour
 
 		if(m_netController.ConsumeAllActions())
 		{
-			Debug.Log(name + " wants some fuk");
 			Mate();
 		}
 
@@ -279,21 +278,15 @@ public class PreyController : MonoBehaviour
 	//-------------------------------------------------------------------------------------------------
 	public void Mate()
 	{
-		Debug.Log("Mate0: " + m_isDead);
-
 		if (m_isDead)
 		{
 			return;
 		}
 
-		Debug.Log("Mate1: " + m_isDead);
-
 		if (GameManager.GetInstance().m_currentState != eGameState.IN_GAME)
 		{
 			return;
 		}
-
-		Debug.Log("Mate2: " + GameManager.GetInstance().m_currentState);
 
 		//Find closest mate
 		PreyController closestPrey = GameManager.GetClosestPrey(this);
@@ -306,8 +299,6 @@ public class PreyController : MonoBehaviour
 			m_isMating = true;
 			Hop(hopDirection);
 		}
-
-		Debug.Log("Mate3: " + closestPrey);
 	}
 
 
