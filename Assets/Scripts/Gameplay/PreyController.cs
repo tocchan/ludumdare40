@@ -311,6 +311,8 @@ public class PreyController : MonoBehaviour
 		//If mating then spawn babies
 		if(m_isMating || otherPrey.m_isMating)
 		{
+			AudioManager.Play(eSoundType.BUNNY_SEXY_TIMES);
+
 			//Spawn setup
 			int spawnTotal = GameManager.GetInstance().m_babySpawnTotal;
 			Vector2 spawnLocation = (transform.position + otherPrey.transform.position) / 2;
@@ -332,6 +334,7 @@ public class PreyController : MonoBehaviour
 	//-------------------------------------------------------------------------------------------------
 	public void Eaten()
 	{
+		AudioManager.Play(eSoundType.BUNNY_DEATH);
 		if(IsPlayer())
 		{
 			m_isDead = true;

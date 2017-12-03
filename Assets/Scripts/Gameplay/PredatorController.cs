@@ -24,13 +24,14 @@ public class PredatorController : MonoBehaviour
 
 
 	//-------------------------------------------------------------------------------------------------
-	private float m_stomachSizeCurrent = 0.0f;
+	public float m_stomachSizeCurrent = 0.0f;
 	private float m_attackTimer = 0.0f;
 	private Vector2 m_moveCurrent = Vector2.zero;
 	private Vector2 m_movePrevious = Vector2.one;
 	private bool m_moveNeedsUpdate = false;
 	private bool m_isAttacking = false;
-   private bool m_isFirstPrey = false; 
+	private bool m_isFirstPrey = false; 
+
 
 	[HideInInspector]
 	public VirtualNetworkController m_netController;
@@ -42,6 +43,7 @@ public class PredatorController : MonoBehaviour
 	[Header("References")]
 	public GameObject m_attackAreaReference;
 	public GameObject m_visualReference;
+	public GameObject m_shadowReference;
 	Rigidbody2D m_rigidbody;
 	CircleCollider2D m_attackAreaCollider;
 	ContactFilter2D m_attackAreaFilter;
@@ -70,12 +72,14 @@ public class PredatorController : MonoBehaviour
 		UpdateMove();
 		UpdateAttack();
 		UpdateVisual();
+		UpdateAudio();
 	}
 
 
 	//-------------------------------------------------------------------------------------------------
 	private void UpdateFoodConsumption()
 	{
+		m_animator.SetFloat("WeightPercent", GetStomachPercent());
 		m_stomachSizeCurrent -= Time.deltaTime * m_foodDigestSpeed;
 		m_stomachSizeCurrent = Mathf.Clamp(m_stomachSizeCurrent, 0.0f, m_stomachSizeMax);
 	}
@@ -162,8 +166,7 @@ public class PredatorController : MonoBehaviour
 		}
 
 		//Get move speed from stomach
-		float stomachPercent = m_stomachSizeCurrent / m_stomachSizeMax;
-		float moveSpeed = Mathf.Lerp(m_moveSpeedMax, m_moveSpeedMin, stomachPercent);
+		float moveSpeed = Mathf.Lerp(m_moveSpeedMax, m_moveSpeedMin, GetStomachPercent());
 
 		//Move predator
 		m_moveCurrent.Normalize();
@@ -206,6 +209,11 @@ public class PredatorController : MonoBehaviour
 				PreyController attackedPrey = attackedObjectParent.GetComponent<PreyController>();
 				if(attackedPrey != null)
 				{
+					if(attackedPrey.m_isDead)
+					{
+						continue;
+					}
+
 					if (m_isFirstPrey) {
 						AudioManager.Play(eSoundType.FOX_EAT);
 						m_isFirstPrey = false;
@@ -243,12 +251,20 @@ public class PredatorController : MonoBehaviour
 			Vector3 scale = m_visualReference.transform.localScale;
 			scale.x = -1.0f * Mathf.Abs(scale.x);
 			m_visualReference.transform.localScale = scale;
+
+			scale = m_shadowReference.transform.localScale;
+			scale.x = -1.0f * Mathf.Abs(scale.x);
+			m_shadowReference.transform.localScale = scale;
 		}
 		else
 		{
 			Vector3 scale = m_visualReference.transform.localScale;
 			scale.x = Mathf.Abs(scale.x);
 			m_visualReference.transform.localScale = scale;
+
+			scale = m_shadowReference.transform.localScale;
+			scale.x = Mathf.Abs(scale.x);
+			m_shadowReference.transform.localScale = scale;
 		}
 
 		//Setting sprite animation
@@ -259,13 +275,21 @@ public class PredatorController : MonoBehaviour
 
 		else if (m_rigidbody.velocity.magnitude > 2.0f)
 		{
-			m_animator.Play(GameManager.ANIM_WOLF_SNIFF, 0, 0.0f);
+			m_animator.Play(GameManager.ANIM_WOLF_WALK, 0, Time.time % 1.0f);
 		}
 
 		else
 		{
 			m_animator.Play(GameManager.ANIM_WOLF_IDLE, 0, 0.0f);
 		}
+	}
+
+
+	//-------------------------------------------------------------------------------------------------
+	private void UpdateAudio()
+	{
+		float stomachPercent = 1.0f - GetStomachPercent();
+		GameManager.GetInstance().SetBGPitch(stomachPercent);
 	}
 
 
@@ -307,5 +331,12 @@ public class PredatorController : MonoBehaviour
 		GameObject prey = Instantiate(GameManager.GetInstance().m_preyPrefab, transform.position, transform.rotation);
 		prey.GetComponent<PreyController>().m_netController = m_netController;
 		Destroy(gameObject);
+	}
+
+	
+	//-------------------------------------------------------------------------------------------------
+	float GetStomachPercent()
+	{
+		return m_stomachSizeCurrent / m_stomachSizeMax;
 	}
 }

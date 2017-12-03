@@ -53,11 +53,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_babySpawnTotal: 4
   m_gameDuration: 300
-  m_gameOverDuration: 10
+  m_gameOverDuration: 5
   m_preyPrefab: {fileID: 1037198839472234, guid: 44558fdc3bec02d4985e126afcce4d35,
     type: 2}
   m_predatorPrefab: {fileID: 1075774623739236, guid: 7974961eed83e404186ed2f8a6b1b350,
     type: 2}
   m_gameTimeText: {fileID: 0}
   m_gameOverText: {fileID: 0}
+  m_backgroundMusic: {fileID: 0}
   m_currentState: 0

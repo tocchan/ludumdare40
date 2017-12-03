@@ -23,7 +23,7 @@ public class GameManager : MonoSingleton<GameManager>
 	public static string TAG_PREDATOR = "Predator";
 	public static string ANIM_RABBIT_HOP = "anim_rabbit_hop";
 	public static string ANIM_WOLF_IDLE = "anim_wolf_idle";
-	public static string ANIM_WOLF_SNIFF = "anim_wolf_sniff";
+	public static string ANIM_WOLF_WALK = "anim_wolf_walk";
 	public static string ANIM_WOLF_BITE = "anim_wolf_bite";
 	public static float GAME_Z = -1.0f;
 
@@ -47,6 +47,7 @@ public class GameManager : MonoSingleton<GameManager>
 	[Header("References")]
 	public Text m_gameTimeText;
 	public Text m_gameOverText;
+	public AudioSource m_backgroundMusic;
 
 
 	//-------------------------------------------------------------------------------------------------
@@ -60,6 +61,13 @@ public class GameManager : MonoSingleton<GameManager>
 
 	//-------------------------------------------------------------------------------------------------
 	// Static Functions
+	//-------------------------------------------------------------------------------------------------
+	public void SetBGPitch(float pitch)
+	{
+		m_backgroundMusic.pitch = pitch;
+	}
+
+
 	//-------------------------------------------------------------------------------------------------
 	public PreyController[] GetHumanPrey()
 	{
@@ -197,7 +205,7 @@ public class GameManager : MonoSingleton<GameManager>
 		if(state == eGameState.IN_GAME)
 		{
 			m_gameTimer = 0.0f;
-
+			AudioManager.Play(eSoundType.FOX_HOWL);
 			SpawnAdditionalPrey();
 		}
 

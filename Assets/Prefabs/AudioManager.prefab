@@ -108,7 +108,7 @@ MonoBehaviour:
   - Type: 13
     Clips:
     - {fileID: 8300000, guid: a3e5be7f3dcb49c4a8a76067e08609cf, type: 3}
-    - {fileID: 8300000, guid: e49fec3d2aae6ae4c9bcefae6beda87d, type: 3}
+    - {fileID: 0}
   - Type: 14
     Clips:
     - {fileID: 8300000, guid: fea8b866e7435c543a83d645169c0420, type: 3}
