@@ -28,7 +28,9 @@ public class HostConnectionStatus : MonoBehaviour
    //-------------------------------------------------------------------
    void ConnectionsChanged( VirtualNetworkController conn )
    {
-      ConnectionCountText.text = "Players: " + HopperNetwork.GetConnectionCount();
+      if (ConnectionCountText != null) {
+         ConnectionCountText.text = "Players: " + HopperNetwork.GetConnectionCount();
+      }
    }
 
    //-------------------------------------------------------------------
