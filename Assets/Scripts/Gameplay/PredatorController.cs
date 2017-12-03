@@ -30,6 +30,7 @@ public class PredatorController : MonoBehaviour
 	private Vector2 m_movePrevious = Vector2.one;
 	private bool m_moveNeedsUpdate = false;
 	private bool m_isAttacking = false;
+   private bool m_isFirstPrey = false; 
 
 	[HideInInspector]
 	public VirtualNetworkController m_netController;
@@ -140,6 +141,11 @@ public class PredatorController : MonoBehaviour
 			return;
 		}
 
+      if (m_netController == null) 
+      {
+         return;
+      }
+
 		if (m_netController.ActionCount > 0)
 		{
 			m_netController.ConsumeAllActions();
@@ -206,6 +212,11 @@ public class PredatorController : MonoBehaviour
 				PreyController attackedPrey = attackedObjectParent.GetComponent<PreyController>();
 				if(attackedPrey != null)
 				{
+               if (m_isFirstPrey) {
+                  AudioManager.Play(eSoundType.FOX_EAT); 
+                  m_isFirstPrey = false;
+               }
+
 					attackedPrey.Eaten();
 					m_stomachSizeCurrent += m_foodSizeBunny;
 				}
@@ -287,8 +298,11 @@ public class PredatorController : MonoBehaviour
 		}
 
 		Move(m_movePrevious);
+      m_isFirstPrey = true; 
 		m_isAttacking = true;
 		m_attackTimer = 0.0f;
+
+      AudioManager.Play(eSoundType.FOX_BITE); 
 	}
 
 

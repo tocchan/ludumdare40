@@ -2,12 +2,36 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+//-------------------------------------------------------------------
+//-------------------------------------------------------------------
+public enum eSoundType
+{
+   BUNNY_BUMP = 0, 
+   BUNNY_SCREAM,
+   BUNNY_SLEEP, 
+   BUNNY_DEATH, 
+   BUNNY_LAUGH, 
+   BUNNY_SEXY_TIMES, 
+   BUNNY_SCARED, 
+   FOX_BITE, 
+   FOX_EAT, 
+   FOX_ANGRY, 
+   FOX_HAPPY, 
+   FOX_EXHAUSTED, 
+   FOX_WORKOUT, 
+   FOX_HOWL, 
+   POOF,
+
+   SOUND_TYPE_COUNT, 
+};
+
 //-------------------------------------------------------------------
 //-------------------------------------------------------------------
 [System.Serializable]
 public class AudioGroup
 {
-   public AudioManager.eSoundType Type;
+   public eSoundType Type;
    public AudioClip[] Clips; 
 }
 
@@ -15,26 +39,6 @@ public class AudioGroup
 //-------------------------------------------------------------------
 public class AudioManager : MonoSingleton<AudioManager>
 {
-   public enum eSoundType
-   {
-      BUNNY_BUMP = 0, 
-      BUNNY_SCREAM,
-      BUNNY_SLEEP, 
-      BUNNY_DEATH, 
-      BUNNY_LAUGH, 
-      BUNNY_SEXY_TIMES, 
-      BUNNY_SCARED, 
-      FOX_BITE, 
-      FOX_EAT, 
-      FOX_ANGRY, 
-      FOX_HAPPY, 
-      FOX_EXHAUSTED, 
-      FOX_WORKOUT, 
-      FOX_HOWL, 
-      POOF,
-
-      SOUND_TYPE_COUNT, 
-   };
 
    //-------------------------------------------------------------------
    public List<AudioGroup> Groups = new List<AudioGroup>(); 
@@ -47,7 +51,7 @@ public class AudioManager : MonoSingleton<AudioManager>
       int max = (int)eSoundType.SOUND_TYPE_COUNT;
 
       for (int i = 0; i < max; ++i) {
-         ClipBuckets[i] = new List<AudioClip>();
+         ClipBuckets.Add( new List<AudioClip>() );
       }
 
       for (int i = 0; i < Groups.Count; ++i) {
