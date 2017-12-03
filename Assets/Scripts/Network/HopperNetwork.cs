@@ -81,7 +81,7 @@ public class HopperNetwork : NetworkManager
    //-------------------------------------------------------------------
    public override void OnServerDisconnect(NetworkConnection conn)
    {
-      base.OnServerDisconnect(conn);
+      NetworkServer.DestroyPlayersForConnection(conn); 
    }
 
    //-------------------------------------------------------------------
