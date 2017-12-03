@@ -25,7 +25,6 @@ public class ClientSceneController : MonoBehaviour
    public Sprite BunnyAction;
    public Sprite WolfAction; 
 
-   public bool IsReady = false; 
    public VirtualNetworkController Controller; 
 
    public eClientState CurrentState = eClientState.DISCOVER;
@@ -43,19 +42,19 @@ public class ClientSceneController : MonoBehaviour
          SetState( eClientState.DISCOVER ); 
       }
 
+      DebugText.gameObject.SetActive(Controller != null); 
+      UpdateDebugText(); 
+
       switch (CurrentState) {
          case eClientState.DISCOVER:
-            DebugText.gameObject.SetActive(false); 
             UpdateDiscovery(); 
             break;
 
          case eClientState.LOBBY:
-            UpdateDebugText(); 
             UpdateLobby();
             break;
 
          case eClientState.IN_GAME:
-            UpdateDebugText(); 
             UpdateInGame();
             break;
 
@@ -101,7 +100,7 @@ public class ClientSceneController : MonoBehaviour
          SetState( eClientState.IN_GAME );
       }
 
-      if (IsReady) {
+      if (Controller.ClientIsReady) {
          ActionImage.sprite = ReadyBunny;
       } else {
          ActionImage.sprite = SleepyBunny;
@@ -115,8 +114,7 @@ public class ClientSceneController : MonoBehaviour
          return;
       }
 
-      IsReady = !IsReady; 
-      Controller.SetReady(IsReady);  
+      Controller.SetReady(!Controller.ClientIsReady);  
    }
 
    //-------------------------------------------------------------------
@@ -137,6 +135,7 @@ public class ClientSceneController : MonoBehaviour
          return;
       }
 
+      DebugText.gameObject.SetActive(true); 
       VirtualNetworkController controller = HopperNetwork.GetMyController(); 
       if (controller == null) {
          DebugText.text = "No Controller"; 
