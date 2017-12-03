@@ -16,10 +16,13 @@ public class VirtualNetworkController : NetworkBehaviour
 
    public bool ClientIsReady = false;
    public bool IsPresentInGame = false;
+   public bool IsDead = false; 
+   public bool IsWolf = false; 
 
    public static DOnPlayerReady OnPlayerReady;
    public static DOnPlayerUnready OnPlayerUnready; 
 
+   //----------------------------------------------------------------------
    private void Start()
    {
       if (HopperNetwork.Instance.OnPlayerJoin != null) {
@@ -27,6 +30,7 @@ public class VirtualNetworkController : NetworkBehaviour
       }
    }
 
+   //----------------------------------------------------------------------
    private void OnDestroy()
    {
       if (ClientIsReady) {
@@ -39,38 +43,29 @@ public class VirtualNetworkController : NetworkBehaviour
       }
    }
 
-
+   //----------------------------------------------------------------------
    public void SetMovement( Vector2 v )
    {
       Movement = v; 
       CmdMovement( v ); 
    }
-
-   [Command (channel=1)]
-   void CmdMovement( Vector2 v )
-   {
-      Movement = v; 
-   }
-
+   
+   //----------------------------------------------------------------------
    public void DoAction()
    {
       ++ActionCount; 
       CmdAction(); 
    }
 
-   [Command (channel=0)]
-   void CmdAction()
-   {
-      ++ActionCount; 
-   }
-
+   //----------------------------------------------------------------------
    private bool HasAction()
    {
       // handle wrapping; 
       uint diff = ActionCount - LastConsumedAction; 
-      return (diff < (uint.MaxValue / 2));
+      return (diff > 0U) && (diff < (uint.MaxValue / 2));
    }
 
+   //----------------------------------------------------------------------
    // Consume a single button press; 
    // may want to store timing eventually with this?
    public bool ConsumeAction()
@@ -83,6 +78,7 @@ public class VirtualNetworkController : NetworkBehaviour
       return false; 
    }
 
+   //----------------------------------------------------------------------
    // Consume all button presses
    public bool ConsumeAllActions()
    {
@@ -92,7 +88,32 @@ public class VirtualNetworkController : NetworkBehaviour
       }
       return false; 
    }
+   
+   //----------------------------------------------------------------------
+   public bool IsInGame()
+   {
+      return IsPresentInGame; 
+   }
 
+
+   //----------------------------------------------------------------------
+   // Commands
+   //----------------------------------------------------------------------
+   //----------------------------------------------------------------------
+   [Command (channel=1)]
+   void CmdMovement( Vector2 v )
+   {
+      Movement = v; 
+   }
+   
+   //----------------------------------------------------------------------
+   [Command (channel=0)]
+   void CmdAction()
+   {
+      ++ActionCount; 
+   }
+
+   //----------------------------------------------------------------------
    [Command(channel=0)]
    public void CmdSetReady( bool ready )
    {
@@ -109,16 +130,32 @@ public class VirtualNetworkController : NetworkBehaviour
       }
    }
 
+   //----------------------------------------------------------------------
+   // RPC
+   //----------------------------------------------------------------------
+   //----------------------------------------------------------------------
+   [ClientRpc(channel = 0)]
+   public void RpcSetDead()
+   {
+      IsDead = true; 
+   }
+
+   //----------------------------------------------------------------------
+   [ClientRpc(channel = 0)]
+   public void RpcSetWolf()
+   {
+      IsWolf = true; 
+   }
+
+   //----------------------------------------------------------------------
    [ClientRpc(channel = 0)]
    public void RpcSetInGame( bool inGame )
    {
       IsPresentInGame = inGame; 
+      if (!inGame) {
+         IsWolf = false; 
+         IsDead = false; 
+      }
    }
-   
-   public bool IsInGame()
-   {
-      return IsPresentInGame; 
-   }
-
 }
 
