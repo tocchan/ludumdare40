@@ -26,11 +26,16 @@ public class ClientConnectionStatus : MonoBehaviour
             break;
 
          case HopperNetwork.eState.CLIENT_READY: 
-            StatusText.text = "READY";
+            VirtualNetworkController me = HopperNetwork.GetMyController();
+            if (me.ClientIsReady) {
+               StatusText.text = "READY";
+            } else {
+               StatusText.text = "NOT READY"; 
+            }
             break;
 
          default:
-            StatusText.text = "UNKNOWN";
+            StatusText.text = "UNKNOWN: " + state;
             break;
       }
    }

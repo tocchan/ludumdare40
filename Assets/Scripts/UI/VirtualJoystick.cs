@@ -95,13 +95,16 @@ public class VirtualJoystick : MonoBehaviour
       }
    }
 
+   private bool HackActionDown = false; 
+
    //---------------------------------------------------------------------
    // Update is called once per frame
    void Update()
    {
       if (!Input.touchSupported) {
          // fake touch
-         if (Input.GetMouseButton(0)) {
+         if (Input.GetMouseButton(0) && (!HackActionDown || (ActiveFingerID >= 0))) {
+            HackActionDown = true; 
             Touch touch = new Touch(); 
             touch.fingerId = 1; 
             if (ActiveFingerID == -1) {
@@ -112,12 +115,13 @@ public class VirtualJoystick : MonoBehaviour
 
             touch.position = Input.mousePosition;
             ProcessTouch(touch); 
-         } else if (ActiveFingerID != -1) {
+         } else if (HackActionDown && !Input.GetMouseButton(0)) {
             Touch touch = new Touch(); 
             touch.phase = TouchPhase.Ended; 
-            touch.fingerId = 1; 
+            touch.fingerId = ActiveFingerID; 
             touch.position = Input.mousePosition;
             ProcessTouch(touch);
+            HackActionDown = false; 
          }
       }
 

@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 
 public class ClientSceneController : MonoBehaviour
 {
+   //-------------------------------------------------------------------
    public enum eClientState
    {
       DISCOVER, 
@@ -13,21 +14,28 @@ public class ClientSceneController : MonoBehaviour
       IN_GAME,  
    }
 
+   //-------------------------------------------------------------------
    public GameObject Title;
-   public GameObject ReadyUpUI;
-   public GameObject WolfUI; 
    public GameObject HopperUI; 
+   public Image ActionImage; 
+
+   public Sprite ReadyBunny;
+   public Sprite SleepyBunny;
+   public Sprite BunnyAction;
+   public Sprite WolfAction; 
 
    public bool IsReady = false; 
    public VirtualNetworkController Controller; 
 
    public eClientState CurrentState = eClientState.DISCOVER;
 
+   //-------------------------------------------------------------------
    public void Start()
    {
       SetState( eClientState.DISCOVER ); 
    }
 
+   //-------------------------------------------------------------------
    public void Update()
    {
       if ((CurrentState != eClientState.DISCOVER) && (!NetworkManager.singleton.isNetworkActive)) {
@@ -52,20 +60,21 @@ public class ClientSceneController : MonoBehaviour
       }
    }
 
+   //-------------------------------------------------------------------
    public void SetState( eClientState state )
    {
-      ReadyUpUI.SetActive(false);
-      // WolfUI.SetActive(false);
-      // HopperUI.SetActive(false); 
+      HopperUI.SetActive(false); 
 
       CurrentState = state; 
       switch (state) {
-         case eClientState.LOBBY: 
-            ReadyUpUI.SetActive(true); 
+         case eClientState.LOBBY:
+         case eClientState.IN_GAME:
+            HopperUI.SetActive(true); 
             break;
       }
    }
 
+   //-------------------------------------------------------------------
    public void UpdateDiscovery()
    {
       var state = HopperNetwork.GetState();
@@ -75,28 +84,46 @@ public class ClientSceneController : MonoBehaviour
       }
    }
 
+   //-------------------------------------------------------------------
    public void UpdateLobby()
    {
       // this state, just wait around until server tells us to move on
+      VirtualNetworkController control = HopperNetwork.GetMyController(); 
+      if (control.ConsumeAllActions()) {
+         ToggleReady(); 
+      }
+
       if (Controller.IsInGame()) {
          SetState( eClientState.IN_GAME );
       }
+
+      if (IsReady) {
+         ActionImage.sprite = ReadyBunny;
+      } else {
+         ActionImage.sprite = SleepyBunny;
+      }
    }
 
+   //-------------------------------------------------------------------
    public void ToggleReady()
    {
       if (CurrentState != eClientState.LOBBY) {
          return;
       }
 
-      Debug.Log( "GOT'EM" ); 
       IsReady = !IsReady; 
-      Controller.CmdSetReady(IsReady); 
-      // do something else; 
+      Controller.SetReady(IsReady);  
    }
 
+   //-------------------------------------------------------------------
    public void UpdateInGame()
    {
+      VirtualNetworkController controller = HopperNetwork.GetMyController(); 
+      if (controller.IsWolf) {
+         ActionImage.sprite = WolfAction;
+      } else {
+         ActionImage.sprite = BunnyAction; 
+      }
    }
 }
 
