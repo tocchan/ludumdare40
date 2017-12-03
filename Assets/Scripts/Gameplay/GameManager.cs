@@ -33,7 +33,8 @@ public class GameManager : MonoSingleton<GameManager>
 	//-------------------------------------------------------------------------------------------------
 	[Header("Settings")]
 	public int m_babySpawnTotal = 4;
-	public float m_gameDuration = 60.0f * 5.0f; //5 minutes
+	public float m_gameDuration = 60.0f * 5.0f;
+	public float m_gameOverDuration = 10.0f;
 
 
 	//-------------------------------------------------------------------------------------------------
@@ -45,10 +46,12 @@ public class GameManager : MonoSingleton<GameManager>
 	//-------------------------------------------------------------------------------------------------
 	[Header("References")]
 	public Text m_gameTimeText;
+	public Text m_gameOverText;
 
 
 	//-------------------------------------------------------------------------------------------------
 	private float m_gameTimer = 0.0f;
+	private float m_gameOverTimer = 0.0f;
 	private bool m_preyWins = false;
 
 	[HideInInspector]
@@ -173,7 +176,8 @@ public class GameManager : MonoSingleton<GameManager>
 	private void Update()
 	{
 		UpdateState(m_currentState);
-		UpdateTime();
+		UpdateTimeLabel();
+		UpdateGameOverLabel();
 	}
 
 
@@ -193,6 +197,13 @@ public class GameManager : MonoSingleton<GameManager>
 		if(state == eGameState.IN_GAME)
 		{
 			m_gameTimer = 0.0f;
+
+			SpawnAdditionalPrey();
+		}
+
+		else if(state == eGameState.GAME_OVER)
+		{
+			m_gameOverTimer = 0.0f;
 		}
 	}
 
@@ -213,7 +224,7 @@ public class GameManager : MonoSingleton<GameManager>
 			}
 		}
 
-		if(state == eGameState.IN_GAME)
+		else if(state == eGameState.IN_GAME)
 		{
 			m_gameTimer += Time.deltaTime;
 			int preyCount = GetHumanPreyAliveCount();
@@ -221,23 +232,29 @@ public class GameManager : MonoSingleton<GameManager>
 			//No players left wolf wins
 			if(preyCount == 0)
 			{
-				m_preyWins = true;
+				m_preyWins = false;
 				ChangeState(eGameState.GAME_OVER);
 			}
 
 			//Times up, bunnies win
 			if(m_gameTimer >= m_gameDuration)
 			{
-				m_preyWins = false;
+				m_preyWins = true;
 				ChangeState(eGameState.GAME_OVER);
 			}
 		}
 
-		if(state == eGameState.GAME_OVER)
+		else if(state == eGameState.GAME_OVER)
 		{
-			HopperNetwork.EndGame();
-			ReviveAndTransformBack();
-			ChangeState(eGameState.WAIT_FOR_READY);
+			m_gameOverTimer += Time.deltaTime;
+
+			//Game over time expires
+			if (m_gameOverTimer >= m_gameOverDuration)
+			{
+				HopperNetwork.EndGame();
+				ReviveAndTransformBack();
+				ChangeState(eGameState.WAIT_FOR_READY);
+			}
 		}
 	}
 
@@ -257,18 +274,48 @@ public class GameManager : MonoSingleton<GameManager>
 		EnterState(m_currentState);
 	}
 
-	
+
 	//-------------------------------------------------------------------------------------------------
-	public void UpdateTime()
+	private void UpdateTimeLabel()
 	{
 		string timeLabel = "";
 		if(m_currentState == eGameState.IN_GAME)
 		{
-			int seconds = (int)m_gameTimer % 60;
-			int minutes = (int)m_gameTimer / 60;
+			float gameTime = m_gameDuration - m_gameTimer;
+			int seconds = (int)gameTime % 60;
+			int minutes = (int)gameTime / 60;
 			timeLabel = string.Format("{0:0}:{1:00}", minutes, seconds);
 		}
 		m_gameTimeText.text = timeLabel;
+	}
+
+
+	//-------------------------------------------------------------------------------------------------
+	private void UpdateGameOverLabel()
+	{
+		string gameOverText = "";
+		if (m_currentState == eGameState.GAME_OVER)
+		{
+			if(m_preyWins)
+			{
+				gameOverText = "BUNNIES WIN!";
+			}
+			
+			else
+			{
+				gameOverText = "WOLVES WIN!";
+			}
+		}
+		
+		m_gameOverText.color = new Color(RandomMathColorFloat(3.0f), RandomMathColorFloat(5.0f), RandomMathColorFloat(7.0f));
+		m_gameOverText.text = gameOverText;
+	}
+
+
+	//-------------------------------------------------------------------------------------------------
+	float RandomMathColorFloat(float timeScale)
+	{
+		return (Mathf.Sin(Time.time * timeScale) + 1.0f) * 0.5f;
 	}
 
 
@@ -314,6 +361,18 @@ public class GameManager : MonoSingleton<GameManager>
 					return;
 				}
 			}
+		}
+	}
+
+
+	//-------------------------------------------------------------------------------------------------
+	private void SpawnAdditionalPrey()
+	{
+		GameObject[] preys = GameObject.FindGameObjectsWithTag(TAG_PREY);
+		for (int preyIndex = 0; preyIndex < preys.Length; ++preyIndex)
+		{
+			PreyController prey = preys[preyIndex].GetComponent<PreyController>();
+			Instantiate(m_preyPrefab, prey.transform.position, Quaternion.identity);
 		}
 	}
 

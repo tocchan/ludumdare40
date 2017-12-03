@@ -196,6 +196,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57fbae746bca64f4ebbefd8208956a2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_reference: {fileID: 1114345531754898}
 --- !u!114 &114658710811833264
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -237,9 +238,11 @@ MonoBehaviour:
   m_moveDelayMin: 0.3
   m_moveDelayMax: 2
   m_debugControl: 0
+  m_isDead: 0
   m_netController: {fileID: 0}
   m_visualReference: {fileID: 1310371877515314}
   m_shadowReference: {fileID: 1472462886017478}
+  m_collisionReference: {fileID: 1114345531754898}
 --- !u!212 &212080153314246044
 SpriteRenderer:
   m_ObjectHideFlags: 1

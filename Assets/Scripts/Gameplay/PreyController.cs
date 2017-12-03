@@ -48,6 +48,7 @@ public class PreyController : MonoBehaviour
 	[Header("References")]
 	public GameObject m_visualReference;
 	public GameObject m_shadowReference;
+	public GameObject m_collisionReference;
 	Rigidbody2D m_rigidbody;
 	Animator m_animator;
 
@@ -230,10 +231,12 @@ public class PreyController : MonoBehaviour
 		if(m_isDead)
 		{
 			m_visualReference.GetComponent<SpriteRenderer>().color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
+			m_collisionReference.SetActive(false);
 		}
 		else
 		{
 			m_visualReference.GetComponent<SpriteRenderer>().color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+			m_collisionReference.SetActive(true);
 		}
 
 		//Hop animation
@@ -320,7 +323,7 @@ public class PreyController : MonoBehaviour
 				Instantiate(GameManager.GetInstance().m_preyPrefab, babyLocation, Quaternion.identity);
 			}
 
-			StartHop();
+			StopHop();
 			otherPrey.StopHop();
 		}
 	}
