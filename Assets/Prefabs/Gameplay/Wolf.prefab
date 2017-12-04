@@ -333,7 +333,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 0
   m_stomachSizeMax: 3
-  m_foodSizeBunny: 1
+  m_foodSizeBunny: 0.6
   m_foodDigestSpeed: 0.25
   m_attackDuration: 0.25
   m_debugControl: 0
