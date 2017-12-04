@@ -22,8 +22,8 @@ public class SetRandomVelocity : MonoBehaviour
       Vector2 up = new Vector2( -forward.y, forward.x ); 
 
       float angle = Random.Range( m_minAngle, m_maxAngle ); 
-      float x = Mathf.Cos( angle ); 
-      float y = -Mathf.Sin( angle ); 
+      float x = Mathf.Cos( angle * Mathf.Deg2Rad ); 
+      float y = -Mathf.Sin( angle * Mathf.Deg2Rad ); 
 
       Vector2 dir = up * y + forward * x;
       float speed = Random.Range( m_minSpeed, m_maxSpeed ) * scale; 

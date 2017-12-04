@@ -59,9 +59,10 @@ public class GameManager : MonoSingleton<GameManager>
 
 	[HideInInspector]
 	public float m_targetPitch = .5f;
-	[HideInInspector]
-	public float m_targetVolume = 1.0f; 
 
+	public float m_targetVolume = .25f; 
+   public float m_defaultPitch = .8f;
+   public float m_audioBlendSpeed = 1.0f; 
 
 	//-------------------------------------------------------------------------------------------------
 	private float m_gameTimer = 0.0f;
@@ -367,6 +368,7 @@ public class GameManager : MonoSingleton<GameManager>
 	{
 	  if (Time.time < 1.0f) {
 		 m_backgroundMusic.volume = 0.0f;
+       m_backgroundMusic.pitch = m_defaultPitch; 
 		 return; 
 	  }
 
@@ -375,7 +377,7 @@ public class GameManager : MonoSingleton<GameManager>
 		if (m_currentState == eGameState.IN_GAME) {
          float remaining = m_gameDuration - m_gameTimer; 
          if (remaining < 10.0f) {
-            timeIntensity = .5f;
+            timeIntensity = .2f;
          }
 		}
 
@@ -383,10 +385,12 @@ public class GameManager : MonoSingleton<GameManager>
 		float volume = m_backgroundMusic.volume; 
 
 		float dt = Time.deltaTime;
-		float lerpValue = Mathf.Clamp( Mathf.Pow( dt, 1.0f ), 0, .2f ); 
+		float lerpValue = Mathf.Clamp( Mathf.Pow( m_audioBlendSpeed * dt, 1.0f ), 0, .2f ); 
 
-		float targetPitch = m_pitchCurve.Evaluate(m_targetPitch) + aliveIntensity + timeIntensity;
-		pitch = Mathf.Lerp( pitch, targetPitch, lerpValue );
+      float fatnessPitch = m_pitchCurve.Evaluate(m_targetPitch); 
+      fatnessPitch = m_defaultPitch;  // just get rid of fatness pitch, base it only on intensity
+		float targetPitch = fatnessPitch + aliveIntensity + timeIntensity;
+		pitch = Mathf.Lerp( pitch, targetPitch, Mathf.Clamp01( 2.0f * Time.deltaTime ) );
 		volume = Mathf.Lerp( volume, m_targetVolume, lerpValue ); 
 
 		m_backgroundMusic.pitch = pitch;

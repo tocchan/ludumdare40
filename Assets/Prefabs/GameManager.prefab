@@ -71,19 +71,21 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 2
       time: -0.00630188
-      value: 0.59994507
+      value: 0.7315502
       inSlope: 0
       outSlope: 0
       tangentMode: 0
     - serializedVersion: 2
       time: 0.9979248
-      value: 0.30149013
-      inSlope: -0.481971
-      outSlope: -0.481971
+      value: 0.3462623
+      inSlope: -0.0055606766
+      outSlope: -0.0055606766
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
   m_targetPitch: 0
-  m_targetVolume: 0.3
+  m_targetVolume: 0.1
+  m_defaultPitch: 0.9
+  m_audioBlendSpeed: 0.1
   m_currentState: 0
