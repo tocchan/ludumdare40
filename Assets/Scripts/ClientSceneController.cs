@@ -17,8 +17,11 @@ public class ClientSceneController : MonoBehaviour
    //-------------------------------------------------------------------
    public GameObject Title;
    public GameObject HopperUI; 
+   public GameObject JoinUI; 
+
    public Image ActionImage; 
    public Text DebugText; 
+   public InputField AddressText; 
 
    public Sprite ReadyBunny;
    public Sprite SleepyBunny;
@@ -77,9 +80,14 @@ public class ClientSceneController : MonoBehaviour
    public void SetState( eClientState state )
    {
       HopperUI.SetActive(false); 
+      JoinUI.SetActive(false); 
 
       CurrentState = state; 
       switch (state) {
+         case eClientState.DISCOVER:
+            JoinUI.SetActive(true); 
+            break;
+
          case eClientState.LOBBY:
          case eClientState.IN_GAME:
             HopperUI.SetActive(true); 
@@ -94,6 +102,8 @@ public class ClientSceneController : MonoBehaviour
       if (state == HopperNetwork.eState.CLIENT_READY) {
          Controller = HopperNetwork.GetMyController(); 
          SetState( eClientState.LOBBY );
+      } else if (!HopperNetwork.Instance.isNetworkActive) {
+         JoinUI.SetActive(true); 
       }
    }
 
@@ -114,6 +124,16 @@ public class ClientSceneController : MonoBehaviour
          ActionImage.sprite = ReadyBunny;
       } else {
          ActionImage.sprite = SleepyBunny;
+      }
+   }
+
+   //-------------------------------------------------------------------
+   public void ManualJoin()
+   {
+      string addr = AddressText.text;
+      if (!string.IsNullOrEmpty(addr)) {
+         HopperNetwork.Instance.ManualJoin(addr); 
+         JoinUI.SetActive(false); 
       }
    }
 

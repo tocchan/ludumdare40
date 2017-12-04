@@ -30,6 +30,10 @@ public class ClientConnectionStatus : MonoBehaviour
             StatusText.text = "DISCONNECTED";
             break;
 
+         case HopperNetwork.eState.CLIENT_JOINED: 
+            StatusText.text = "JOINING: " + HopperNetwork.Instance.networkAddress; 
+            break; 
+
          case HopperNetwork.eState.CLIENT_LOOKING:
             StatusText.text = "SEARCHING..."; 
             break;

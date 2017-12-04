@@ -73,6 +73,14 @@ public class HopperNetwork : NetworkManager
    }
 
    //-------------------------------------------------------------------
+   public void ManualJoin( string address )
+   {
+      Discovery.Stop(); 
+      HopperNetwork.Instance.networkAddress = address; 
+      StartClient(); 
+   }
+
+   //-------------------------------------------------------------------
    public override void OnServerConnect( NetworkConnection conn )
    {
       Debug.Log( "Client Connected to Server: " + conn.address ); 
