@@ -30,6 +30,7 @@ public class PreyController : MonoBehaviour
 	//-------------------------------------------------------------------------------------------------
 	private bool m_isHopping = false;
 	private bool m_isMating = false;
+   private bool m_firstContact = false; // after trying to mate, this will be true up until the first hit
 	private float m_hopTimer = 0.0f;
 	private Vector2 m_hopDirection = Vector2.zero;
 	private Vector2 m_visualStartLocation = Vector2.zero;
@@ -303,6 +304,7 @@ public class PreyController : MonoBehaviour
 			Vector2 positionCurrent = transform.position;
 			Vector2 hopDirection = positionMate - positionCurrent;
 			m_isMating = true;
+         m_firstContact = true; 
 			Hop(hopDirection);
 		}
 	}
@@ -410,8 +412,9 @@ public class PreyController : MonoBehaviour
 			{
 				SpawnBabiesWith(hitPrey);
 			}
-			else if (m_isMating) 
+			else if (m_isMating && m_firstContact) 
 			{
+            m_firstContact = false; // only play a bump once
 				AudioManager.Play(eSoundType.BUNNY_BUMP);
 			}
 		}
