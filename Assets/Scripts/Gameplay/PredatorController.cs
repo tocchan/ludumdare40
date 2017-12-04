@@ -334,7 +334,7 @@ public class PredatorController : MonoBehaviour
 
 		else
 		{
-			m_animator.Play(GameManager.ANIM_WOLF_IDLE, 0, 0.0f);
+			m_animator.Play(GameManager.ANIM_WOLF_IDLE, 0, Time.time % 1.0f);
 		}
 
 		//Faded when delayed

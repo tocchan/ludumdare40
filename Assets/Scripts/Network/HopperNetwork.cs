@@ -102,21 +102,25 @@ public class HopperNetwork : NetworkManager
    //-------------------------------------------------------------------
    void UpdateLocalControllers()
    {
-      for (int i = 0; i < LocalControllers.Length; ++i) {
-         LocalController local = LocalControllers[i]; 
-         if (local == null) {
-            KeyCode join_key = LocalController.GetActionKey(i); 
-            if (Input.GetKeyDown(join_key)) {
-               GameObject go = GameObject.Instantiate(LocalControllerPrefab);
-               local = go.GetComponent<LocalController>();
-               local.GamepadID = i; 
-               LocalControllers[i] = local;
-            }
-         } else {
-            KeyCode leave_key = LocalController.GetCancelKey(i); 
-            if (Input.GetKeyDown(leave_key)) {
-               GameObject.Destroy( local.gameObject ); 
-               LocalControllers[i] = null; 
+      // Only allow players to join/leave during the lobby state
+      if (GameManager.GetInstance().m_currentState == eGameState.WAIT_FOR_READY) {
+         for (int i = 0; i < LocalControllers.Length; ++i) {
+            LocalController local = LocalControllers[i];
+            if (local == null) {
+               KeyCode join_key = LocalController.GetActionKey(i);
+               if (Input.GetKeyDown(join_key)) {
+                  GameObject go = GameObject.Instantiate(LocalControllerPrefab);
+                  local = go.GetComponent<LocalController>();
+                  local.GamepadID = i;
+                  LocalControllers[i] = local;
+               }
+            } else {
+               // only allow people to leave locally 
+               KeyCode leave_key = LocalController.GetCancelKey(i);
+               if (Input.GetKeyDown(leave_key)) {
+                  GameObject.Destroy(local.gameObject);
+                  LocalControllers[i] = null;
+               }
             }
          }
       }

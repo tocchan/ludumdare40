@@ -303,6 +303,12 @@ public class PreyController : MonoBehaviour
 			Vector2 positionMate = closestPrey.transform.position;
 			Vector2 positionCurrent = transform.position;
 			Vector2 hopDirection = positionMate - positionCurrent;
+
+         // play audio when I attempt to mate; 
+         if (m_isMating == false) {
+            AudioManager.Play( eSoundType.BUNNY_LAUGH ); 
+         }
+
 			m_isMating = true;
          m_firstContact = true; 
 			Hop(hopDirection);
