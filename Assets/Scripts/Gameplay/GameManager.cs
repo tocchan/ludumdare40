@@ -48,6 +48,14 @@ public class GameManager : MonoSingleton<GameManager>
 	public GameObject m_bonePilePrefab;
 	public GameObject m_explosionPrefab;
 
+   	//-------------------------------------------------------------------------------------------------
+	[Header("Tutorals")]
+	public GameObject m_UIJoin; 
+	public GameObject m_UIPlayersRequired;
+	public GameObject m_UIReadyUp;
+	public GameObject m_UIInstructions;
+   private bool m_firstGame = true; 
+
 
 	//-------------------------------------------------------------------------------------------------
 	[Header("References")]
@@ -215,6 +223,8 @@ public class GameManager : MonoSingleton<GameManager>
 		EnterState(m_currentState);
 
 		SetTargetBGPitch(.5f); 
+
+      m_UIJoin.SetActive(true); 
 	}
 
 
@@ -263,18 +273,37 @@ public class GameManager : MonoSingleton<GameManager>
 	//-------------------------------------------------------------------------------------------------
 	private void UpdateState(eGameState state)
 	{
-		if(state == eGameState.WAIT_FOR_READY)
-		{
-			bool isReady = HopperNetwork.IsEveryoneReady();
-			bool isEnoughPlayers = HopperNetwork.GetPlayerCount() >= 3;
+      if (state == eGameState.WAIT_FOR_READY) {
+         bool isReady = HopperNetwork.IsEveryoneReady();
+         bool isEnoughPlayers = HopperNetwork.GetPlayerCount() >= 3;
 
-			if(isReady && isEnoughPlayers)
-			{
-				HopperNetwork.StartGame();
-				TransformRandomPrey();
-				ChangeState(eGameState.IN_GAME);
-			}
-		}
+         m_UIReadyUp.SetActive(false);
+         m_UIPlayersRequired.SetActive(false);
+
+
+         if (isReady && isEnoughPlayers) {
+            HopperNetwork.StartGame();
+            TransformRandomPrey();
+            ChangeState(eGameState.IN_GAME);
+
+            m_UIInstructions.SetActive(false); 
+            m_firstGame = false;
+         }
+         else
+         {
+            if (m_currentState == eGameState.WAIT_FOR_READY) 
+            {
+               if (HopperNetwork.GetPlayerCount() < 3) 
+               {
+                  m_UIPlayersRequired.SetActive(true); 
+               } 
+               else 
+               {
+                  m_UIReadyUp.SetActive(true); 
+               }
+            }
+         }
+      }
 
 		else if(state == eGameState.IN_GAME)
 		{
@@ -413,6 +442,11 @@ public class GameManager : MonoSingleton<GameManager>
 		GameObject preyObject = Instantiate(m_preyPrefab, spawnLocation, Quaternion.identity);
 		PreyController prey = preyObject.GetComponent<PreyController>();
 		prey.m_netController = controller;
+
+      m_UIJoin.SetActive(false);
+      if (m_firstGame) {
+         m_UIInstructions.SetActive(true); 
+      }
 	}
 
 
@@ -430,9 +464,13 @@ public class GameManager : MonoSingleton<GameManager>
 				{
 			   // C4 - ghosts were multiplying really fast
 					GameObject.Destroy(prey.gameObject); 
-					return;
 				}
 			}
+
+         if (m_firstGame && (HopperNetwork.GetPlayerCount() == 0)) {
+            m_UIJoin.SetActive(true); 
+            m_UIInstructions.SetActive(false); 
+         }
 		}
 
 		//Find controller if it was a predator
