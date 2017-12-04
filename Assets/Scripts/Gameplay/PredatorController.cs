@@ -16,7 +16,10 @@ public class PredatorController : MonoBehaviour
 	public float m_stomachSizeMax = 3.0f;
 	public float m_foodSizeBunny = 1.0f;
 	public float m_foodDigestSpeed = 1.0f;
+   public float m_foodDigestSpeedPerBunny = .25f; 
 	public float m_attackDuration = 0.25f;
+
+   private float m_gameDigestSpeed = 1.0f; 
 
 
 	//-------------------------------------------------------------------------------------------------
@@ -63,6 +66,9 @@ public class PredatorController : MonoBehaviour
 		m_attackAreaCollider = m_attackAreaReference.GetComponent<CircleCollider2D>();
 		m_attackAreaFilter = new ContactFilter2D();
 		m_attackAreaFilter.NoFilter();
+
+      int count = HopperNetwork.GetPlayerCount(); 
+      m_gameDigestSpeed = m_foodDigestSpeed + (float)count * m_foodDigestSpeedPerBunny;
 	}
 
 
@@ -85,7 +91,8 @@ public class PredatorController : MonoBehaviour
 		m_animator.SetFloat("WeightPercent", GetStomachPercent());
 
 	  float cur_size = m_stomachSizeCurrent; 
-		m_stomachSizeCurrent -= Time.deltaTime * m_foodDigestSpeed;
+      
+		m_stomachSizeCurrent -= Time.deltaTime * m_gameDigestSpeed;
 		m_stomachSizeCurrent = Mathf.Clamp(m_stomachSizeCurrent, 0.0f, m_stomachSizeMax);
 
 	  if ((cur_size > 0.0f) && (m_stomachSizeCurrent == 0.0f)) 
