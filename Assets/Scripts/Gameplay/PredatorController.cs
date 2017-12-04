@@ -327,7 +327,7 @@ public class PredatorController : MonoBehaviour
 			m_animator.Play(GameManager.ANIM_WOLF_BITE, 0, bitePercent);
 		}
 
-		else if (m_rigidbody.velocity.magnitude > 2.0f)
+		else if (m_rigidbody.velocity.magnitude > 0.5f)
 		{
 			m_animator.Play(GameManager.ANIM_WOLF_WALK, 0, Time.time % 1.0f);
 		}
