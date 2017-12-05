@@ -36,7 +36,9 @@ public class GameManager : MonoSingleton<GameManager>
 	//-------------------------------------------------------------------------------------------------
 	[Header("Settings")]
 	public int m_babySpawnTotal = 4;
-	public float m_gameDuration = 60.0f * 5.0f;
+	public float m_gameDurationAdditionalPerRabbit = 20.0f;
+	public float m_gameDurationBase = 0.0f;
+	private float m_gameDuration = 60.0f;
 	public float m_gameOverDuration = 10.0f;
 	public float m_wolfDelayOnStart = 3.0f;
 
@@ -48,13 +50,14 @@ public class GameManager : MonoSingleton<GameManager>
 	public GameObject m_bonePilePrefab;
 	public GameObject m_explosionPrefab;
 
-   	//-------------------------------------------------------------------------------------------------
+
+	//-------------------------------------------------------------------------------------------------
 	[Header("Tutorals")]
 	public GameObject m_UIJoin; 
 	public GameObject m_UIPlayersRequired;
 	public GameObject m_UIReadyUp;
 	public GameObject m_UIInstructions;
-   private bool m_firstGame = true; 
+	private bool m_firstGame = true; 
 
 
 	//-------------------------------------------------------------------------------------------------
@@ -68,9 +71,10 @@ public class GameManager : MonoSingleton<GameManager>
 	[HideInInspector]
 	public float m_targetPitch = .5f;
 
-	public float m_targetVolume = .25f; 
-   public float m_defaultPitch = .8f;
-   public float m_audioBlendSpeed = 1.0f; 
+	public float m_targetVolume = .25f;
+	public float m_defaultPitch = .8f;
+	public float m_audioBlendSpeed = 1.0f; 
+
 
 	//-------------------------------------------------------------------------------------------------
 	private float m_gameTimer = 0.0f;
@@ -224,7 +228,7 @@ public class GameManager : MonoSingleton<GameManager>
 
 		SetTargetBGPitch(.5f); 
 
-      m_UIJoin.SetActive(true); 
+		m_UIJoin.SetActive(true); 
 	}
 
 
@@ -273,37 +277,41 @@ public class GameManager : MonoSingleton<GameManager>
 	//-------------------------------------------------------------------------------------------------
 	private void UpdateState(eGameState state)
 	{
-      if (state == eGameState.WAIT_FOR_READY) {
-         bool isReady = HopperNetwork.IsEveryoneReady();
-         bool isEnoughPlayers = HopperNetwork.GetPlayerCount() >= 3;
+		if (state == eGameState.WAIT_FOR_READY)
+		{
+			bool isReady = HopperNetwork.IsEveryoneReady();
+			bool isEnoughPlayers = HopperNetwork.GetPlayerCount() >= 3;
 
-         m_UIReadyUp.SetActive(false);
-         m_UIPlayersRequired.SetActive(false);
+			m_UIReadyUp.SetActive(false);
+			m_UIPlayersRequired.SetActive(false);
 
 
-         if (isReady && isEnoughPlayers) {
-            HopperNetwork.StartGame();
-            TransformRandomPrey();
-            ChangeState(eGameState.IN_GAME);
+			if (isReady && isEnoughPlayers)
+			{
+				HopperNetwork.StartGame();
+				TransformRandomPrey();
+				ChangeState(eGameState.IN_GAME);
 
-            m_UIInstructions.SetActive(false); 
-            m_firstGame = false;
-         }
-         else
-         {
-            if (m_currentState == eGameState.WAIT_FOR_READY) 
-            {
-               if (HopperNetwork.GetPlayerCount() < 3) 
-               {
-                  m_UIPlayersRequired.SetActive(true); 
-               } 
-               else 
-               {
-                  m_UIReadyUp.SetActive(true); 
-               }
-            }
-         }
-      }
+				int count = HopperNetwork.GetPlayerCount();
+				m_gameDuration = m_gameDurationBase + m_gameDurationAdditionalPerRabbit * (count - 1);
+				m_UIInstructions.SetActive(false);
+				m_firstGame = false;
+			}
+			else
+			{
+				if (m_currentState == eGameState.WAIT_FOR_READY)
+				{
+					if (HopperNetwork.GetPlayerCount() < 3)
+					{
+						m_UIPlayersRequired.SetActive(true);
+					}
+					else
+					{
+						m_UIReadyUp.SetActive(true);
+					}
+				}
+			}
+		}
 
 		else if(state == eGameState.IN_GAME)
 		{
@@ -395,29 +403,32 @@ public class GameManager : MonoSingleton<GameManager>
 	//-------------------------------------------------------------------------------------------------
 	private void UpdateMusic()
 	{
-	  if (Time.time < 1.0f) {
-		 m_backgroundMusic.volume = 0.0f;
-       m_backgroundMusic.pitch = m_defaultPitch; 
-		 return; 
-	  }
+		if (Time.time < 1.0f)
+		{
+			m_backgroundMusic.volume = 0.0f;
+			m_backgroundMusic.pitch = m_defaultPitch;
+			return;
+		}
 
-		float aliveIntensity = 0.0f; 
-	  float timeIntensity = 0.0f; 
-		if (m_currentState == eGameState.IN_GAME) {
-         float remaining = m_gameDuration - m_gameTimer; 
-         if (remaining < 10.0f) {
-            timeIntensity = .2f;
-         }
+		float aliveIntensity = 0.0f;
+		float timeIntensity = 0.0f;
+		if (m_currentState == eGameState.IN_GAME)
+		{
+			float remaining = m_gameDuration - m_gameTimer;
+			if (remaining < 10.0f)
+			{
+				timeIntensity = .2f;
+			}
 		}
 
 		float pitch = m_backgroundMusic.pitch;
 		float volume = m_backgroundMusic.volume; 
 
 		float dt = Time.deltaTime;
-		float lerpValue = Mathf.Clamp( Mathf.Pow( m_audioBlendSpeed * dt, 1.0f ), 0, .2f ); 
+		float lerpValue = Mathf.Clamp( Mathf.Pow( m_audioBlendSpeed * dt, 1.0f ), 0, .2f );
 
-      float fatnessPitch = m_pitchCurve.Evaluate(m_targetPitch); 
-      fatnessPitch = m_defaultPitch;  // just get rid of fatness pitch, base it only on intensity
+		float fatnessPitch = m_pitchCurve.Evaluate(m_targetPitch);
+		fatnessPitch = m_defaultPitch;  // just get rid of fatness pitch, base it only on intensity
 		float targetPitch = fatnessPitch + aliveIntensity + timeIntensity;
 		pitch = Mathf.Lerp( pitch, targetPitch, Mathf.Clamp01( 2.0f * Time.deltaTime ) );
 		volume = Mathf.Lerp( volume, m_targetVolume, lerpValue ); 
@@ -443,10 +454,11 @@ public class GameManager : MonoSingleton<GameManager>
 		PreyController prey = preyObject.GetComponent<PreyController>();
 		prey.m_netController = controller;
 
-      m_UIJoin.SetActive(false);
-      if (m_firstGame) {
-         m_UIInstructions.SetActive(true); 
-      }
+		m_UIJoin.SetActive(false);
+		if (m_firstGame)
+		{
+			m_UIInstructions.SetActive(true);
+		}
 	}
 
 
@@ -462,15 +474,16 @@ public class GameManager : MonoSingleton<GameManager>
 			{
 				if(prey.m_netController == controller)
 				{
-			   // C4 - ghosts were multiplying really fast
+					// C4 - ghosts were multiplying really fast
 					GameObject.Destroy(prey.gameObject); 
 				}
 			}
 
-         if (m_firstGame && (HopperNetwork.GetPlayerCount() == 0)) {
-            m_UIJoin.SetActive(true); 
-            m_UIInstructions.SetActive(false); 
-         }
+			if (m_firstGame && (HopperNetwork.GetPlayerCount() == 0))
+			{
+				m_UIJoin.SetActive(true);
+				m_UIInstructions.SetActive(false);
+			}
 		}
 
 		//Find controller if it was a predator
